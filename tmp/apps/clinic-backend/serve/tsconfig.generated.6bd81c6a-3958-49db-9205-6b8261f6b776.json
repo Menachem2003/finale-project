@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@clinic/shared": [
+        "libs/shared/src/index.ts"
+      ]
+    }
+  },
+  "extends": "..\\..\\..\\..\\apps\\clinic-backend\\tsconfig.app.json"
+}

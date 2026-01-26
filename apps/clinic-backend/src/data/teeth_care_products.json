@@ -1,0 +1,212 @@
+[
+  {
+    "name": "FreshMint Toothpaste",
+    "description": "FreshMint Toothpaste is designed for effective and gentle oral hygiene.",
+    "price": 21.58,
+    "count": 58,
+    "category": "Floss"
+  },
+  {
+    "name": "UltraSoft Toothbrush",
+    "description": "UltraSoft Toothbrush is designed for effective and gentle oral hygiene.",
+    "price": 20.8,
+    "count": 81,
+    "category": "Floss"
+  },
+  {
+    "name": "CleanSmile Mouthwash",
+    "description": "CleanSmile Mouthwash is designed for effective and gentle oral hygiene.",
+    "price": 22.6,
+    "count": 34,
+    "category": "Toothbrush"
+  },
+  {
+    "name": "DentalFloss Pro",
+    "description": "DentalFloss Pro is designed for effective and gentle oral hygiene.",
+    "price": 19.95,
+    "count": 20,
+    "category": "Orthodontic Care"
+  },
+  {
+    "name": "Whitening Strips",
+    "description": "Whitening Strips is designed for effective and gentle oral hygiene.",
+    "price": 14.61,
+    "count": 45,
+    "category": "Toothbrush"
+  },
+  {
+    "name": "GumCare Gel",
+    "description": "GumCare Gel is designed for effective and gentle oral hygiene.",
+    "price": 5.7,
+    "count": 19,
+    "category": "Electric Toothbrush"
+  },
+  {
+    "name": "Electric Brush 360",
+    "description": "Electric Brush 360 is designed for effective and gentle oral hygiene.",
+    "price": 24.67,
+    "count": 87,
+    "category": "Floss"
+  },
+  {
+    "name": "Kids Berry Paste",
+    "description": "Kids Berry Paste is designed for effective and gentle oral hygiene.",
+    "price": 24.77,
+    "count": 94,
+    "category": "Floss"
+  },
+  {
+    "name": "Braces Cleaning Kit",
+    "description": "Braces Cleaning Kit is designed for effective and gentle oral hygiene.",
+    "price": 17.69,
+    "count": 72,
+    "category": "Kids Oral Care"
+  },
+  {
+    "name": "Denture Cleaner Tabs",
+    "description": "Denture Cleaner Tabs is designed for effective and gentle oral hygiene.",
+    "price": 16.24,
+    "count": 30,
+    "category": "Kids Oral Care"
+  },
+  {
+    "name": "Charcoal Toothpaste",
+    "description": "Charcoal Toothpaste is designed for effective and gentle oral hygiene.",
+    "price": 24.52,
+    "count": 65,
+    "category": "Toothpaste"
+  },
+  {
+    "name": "Mint Floss Picks",
+    "description": "Mint Floss Picks is designed for effective and gentle oral hygiene.",
+    "price": 7.59,
+    "count": 78,
+    "category": "Electric Toothbrush"
+  },
+  {
+    "name": "Sensitive Teeth Gel",
+    "description": "Sensitive Teeth Gel is designed for effective and gentle oral hygiene.",
+    "price": 19.95,
+    "count": 23,
+    "category": "Kids Oral Care"
+  },
+  {
+    "name": "Bamboo Toothbrush",
+    "description": "Bamboo Toothbrush is designed for effective and gentle oral hygiene.",
+    "price": 4.89,
+    "count": 62,
+    "category": "Toothpaste"
+  },
+  {
+    "name": "Travel Mouthwash",
+    "description": "Travel Mouthwash is designed for effective and gentle oral hygiene.",
+    "price": 14.48,
+    "count": 19,
+    "category": "Kids Oral Care"
+  },
+  {
+    "name": "Fluoride Toothpaste",
+    "description": "Fluoride Toothpaste is designed for effective and gentle oral hygiene.",
+    "price": 21.3,
+    "count": 52,
+    "category": "Electric Toothbrush"
+  },
+  {
+    "name": "Whitening Pen",
+    "description": "Whitening Pen is designed for effective and gentle oral hygiene.",
+    "price": 22.35,
+    "count": 43,
+    "category": "Gum Care"
+  },
+  {
+    "name": "Tongue Scraper",
+    "description": "Tongue Scraper is designed for effective and gentle oral hygiene.",
+    "price": 16.32,
+    "count": 24,
+    "category": "Mouthwash"
+  },
+  {
+    "name": "Enamel Repair Paste",
+    "description": "Enamel Repair Paste is designed for effective and gentle oral hygiene.",
+    "price": 6.66,
+    "count": 34,
+    "category": "Gum Care"
+  },
+  {
+    "name": "Herbal Tooth Powder",
+    "description": "Herbal Tooth Powder is designed for effective and gentle oral hygiene.",
+    "price": 20.45,
+    "count": 80,
+    "category": "Kids Oral Care"
+  },
+  {
+    "name": "Night Guard Cleaner",
+    "description": "Night Guard Cleaner is designed for effective and gentle oral hygiene.",
+    "price": 13.32,
+    "count": 62,
+    "category": "Kids Oral Care"
+  },
+  {
+    "name": "Plaque Control Rinse",
+    "description": "Plaque Control Rinse is designed for effective and gentle oral hygiene.",
+    "price": 19.2,
+    "count": 21,
+    "category": "Toothbrush"
+  },
+  {
+    "name": "Ortho Wax",
+    "description": "Ortho Wax is designed for effective and gentle oral hygiene.",
+    "price": 18.11,
+    "count": 68,
+    "category": "Toothpaste"
+  },
+  {
+    "name": "Kids Electric Brush",
+    "description": "Kids Electric Brush is designed for effective and gentle oral hygiene.",
+    "price": 6.33,
+    "count": 17,
+    "category": "Denture Care"
+  },
+  {
+    "name": "Antibacterial Rinse",
+    "description": "Antibacterial Rinse is designed for effective and gentle oral hygiene.",
+    "price": 5.98,
+    "count": 67,
+    "category": "Toothbrush"
+  },
+  {
+    "name": "Toothbrush Holder",
+    "description": "Toothbrush Holder is designed for effective and gentle oral hygiene.",
+    "price": 6.58,
+    "count": 65,
+    "category": "Toothbrush"
+  },
+  {
+    "name": "Toothpaste Dispenser",
+    "description": "Toothpaste Dispenser is designed for effective and gentle oral hygiene.",
+    "price": 9.34,
+    "count": 80,
+    "category": "Denture Care"
+  },
+  {
+    "name": "Mouth Guard Case",
+    "description": "Mouth Guard Case is designed for effective and gentle oral hygiene.",
+    "price": 11.1,
+    "count": 44,
+    "category": "Orthodontic Care"
+  },
+  {
+    "name": "Floss Threaders",
+    "description": "Floss Threaders is designed for effective and gentle oral hygiene.",
+    "price": 21.21,
+    "count": 95,
+    "category": "Gum Care"
+  },
+  {
+    "name": "Denture Adhesive Cream",
+    "description": "Denture Adhesive Cream is designed for effective and gentle oral hygiene.",
+    "price": 11.95,
+    "count": 23,
+    "category": "Orthodontic Care"
+  }
+]

@@ -1,0 +1,293 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body,
+html {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  font-family: "Inter", sans-serif;
+}
+
+.container {
+  padding: 0;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.hero-home {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  object-position: center 10%;
+  display: block;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+.titel-picture {
+  position: relative;
+  width: 100%;
+}
+
+.hero-content {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  text-align: center;
+  z-index: 1;
+}
+
+.home-title {
+  font-size: 2.2rem;
+  color: #9ab6b9;
+  text-align: center;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  animation: fadeIn 3s forwards;
+  z-index: 1;
+  max-width: 90%;
+  padding: 0 1rem;
+  margin-bottom: 8px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.home-button {
+  background-color: #00acc6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.home-button:hover {
+  background-color: #008ca5;
+  transform: translateY(-2px);
+}
+
+.services-section {
+  padding: 50px 20px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #00385b;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 70px;
+}
+
+.services-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  width: 280px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.services-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.service-title {
+  font-size: 1.3rem;
+  color: hsla(210, 70%, 75%, 1);
+  margin-bottom: 10px;
+}
+
+.services-description {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.services-img {
+  width: 100%;
+  margin-top: auto;
+  height: 200px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.service-card-link {
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    height: 60vh;
+    min-height: 300px;
+  }
+  .home-title {
+    font-size: 2rem;
+  }
+  .home-description {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    height: 50vh;
+    min-height: 250px;
+  }
+  .home-title {
+    font-size: 1.8rem;
+  }
+}
+
+.middle-container {
+  padding: 50px 20px;
+  background-color: #f9f9f9;
+}
+
+.middle-content {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.middle-logo-container {
+  flex: 0 0 300px;
+}
+
+.middle-logo {
+  width: 100%;
+  height: auto;
+}
+
+.title-middle {
+  color: #00385b;
+  font-size: 2.3rem;
+  text-align: right;
+  direction: rtl;
+}
+
+.middle-description {
+  flex: 1;
+  max-width: 700px;
+}
+
+.home-description {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  text-align: right;
+  direction: rtl;
+}
+
+@media (max-width: 768px) {
+  .middle-content {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .middle-logo-container {
+    margin-bottom: 24px;
+  }
+
+  .middle-description {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .middle-container {
+    padding: 40px 15px;
+  }
+
+  .home-description {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+
+/* footer */
+
+.footer {
+  background-color: #163d62;
+  color: white;
+  padding: 80px 20px;
+  font-family: serif, sans-serif;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-section {
+  text-align: start;
+  flex: 1;
+  min-width: 200px;
+  margin: 10px;
+  direction: rtl;
+}
+
+.footer-section h4 {
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li a {
+  text-decoration: none;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+  color: black;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #e7e7e7;
+}
+
+.copyright {
+  color: #777;
+  margin-top: 25px;
+}

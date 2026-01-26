@@ -1,0 +1,34 @@
+{
+  "name": "clinic-backend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/clinic-backend/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/clinic-backend",
+        "main": "apps/clinic-backend/src/main.ts",
+        "tsConfig": "apps/clinic-backend/tsconfig.app.json",
+        "assets": ["apps/clinic-backend/src/assets", "apps/clinic-backend/package.json"]
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "clinic-backend:build"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "clinic-backend:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  },
+  "tags": []
+}

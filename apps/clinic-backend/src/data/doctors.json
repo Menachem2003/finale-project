@@ -1,0 +1,39 @@
+[
+  {
+    "name": "יוסי מורדכייב",
+    "specialties": ["68a1a129d9218c9e5504fa02", "68a1a129d9218c9e5504fa01"],
+    "workingHours": [
+      { "day": "ראשון", "workStart": "09:00", "workEnd": "17:00" },
+      { "day": "שלישי", "workStart": "10:00", "workEnd": "18:00" }
+    ]
+  },
+  {
+    "name": "מרינה וולקוב",
+    "specialties": ["68a1a129d9218c9e5504fa03", "68a1a129d9218c9e5504fa04"],
+    "workingHours": [
+      { "day": "שישי", "workStart": "08:00", "workEnd": "14:00" }
+    ]
+  },
+  {
+    "name": "מרינה גרסקין",
+    "specialties": [
+      "68a1a129d9218c9e5504fa01",
+      "68a1a129d9218c9e5504fa02",
+      "68a1a129d9218c9e5504fa05",
+      "68a1a129d9218c9e5504fa06"
+    ],
+    "workingHours": [
+      { "day": "חמישי", "workStart": "08:00", "workEnd": "16:00" },
+      { "day": "רביעי", "workStart": "09:00", "workEnd": "14:00" },
+      { "day": "שישי", "workStart": "09:00", "workEnd": "14:00" }
+    ]
+  },
+  {
+    "name": "גבריאל סופיצ'אייב",
+    "specialties": ["68a1a129d9218c9e5504fa07"],
+    "workingHours": [
+      { "day": "חמישי", "workStart": "14:00", "workEnd": "19:00" },
+      { "day": "רביעי", "workStart": "14:00", "workEnd": "19:00" }
+    ]
+  }
+]

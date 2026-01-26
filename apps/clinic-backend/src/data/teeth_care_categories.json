@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "category": "Denture Care"
+  },
+  {
+    "id": 2,
+    "category": "Electric Toothbrush"
+  },
+  {
+    "id": 3,
+    "category": "Floss"
+  },
+  {
+    "id": 4,
+    "category": "Gum Care"
+  },
+  {
+    "id": 5,
+    "category": "Kids Oral Care"
+  },
+  {
+    "id": 6,
+    "category": "Mouthwash"
+  },
+  {
+    "id": 7,
+    "category": "Orthodontic Care"
+  },
+  {
+    "id": 8,
+    "category": "Toothbrush"
+  },
+  {
+    "id": 9,
+    "category": "Toothpaste"
+  }
+]
