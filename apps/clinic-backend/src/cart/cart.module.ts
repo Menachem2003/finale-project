@@ -28,7 +28,7 @@ export class CartModule implements OnModuleInit {
       const collection = this.connection.collection('carts');
       const indexes = await collection.indexes();
       
-      Logger.log('Checking for problematic indexes on carts collection...');
+      Logger.info('Checking for problematic indexes on carts collection...');
       
       // Find all indexes that might be problematic
       const problematicIndexes = indexes.filter(
@@ -46,18 +46,22 @@ export class CartModule implements OnModuleInit {
         Logger.warn(`Found ${problematicIndexes.length} problematic index(es), dropping them...`);
         for (const idx of problematicIndexes) {
           try {
-            await collection.dropIndex(idx.name);
-            Logger.success(`Successfully dropped index: ${idx.name}`);
+            if (idx.name) {
+              await collection.dropIndex(idx.name);
+              Logger.success(`Successfully dropped index: ${idx.name}`);
+            }
           } catch (dropError) {
-            Logger.warn(`Could not drop index ${idx.name}:`, dropError instanceof Error ? dropError.message : String(dropError));
+            const errorMessage = dropError instanceof Error ? dropError.message : String(dropError);
+            Logger.warn(`Could not drop index ${idx.name || 'unknown'}: ${errorMessage}`);
           }
         }
       } else {
-        Logger.log('No problematic indexes found on carts collection');
+        Logger.info('No problematic indexes found on carts collection');
       }
     } catch (error) {
       // Index might not exist, which is fine
-      Logger.warn('Error checking/dropping indexes:', error instanceof Error ? error.message : String(error));
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      Logger.warn(`Error checking/dropping indexes: ${errorMessage}`);
     }
   }
 }

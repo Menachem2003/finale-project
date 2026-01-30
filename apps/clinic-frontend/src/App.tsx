@@ -13,6 +13,8 @@ import Products from "./pages/ProductsPage/Products";
 import { api } from "./utils/api";
 import ProductPage from "./pages/ProductsPage/component/ProductPage";
 import Cart from "./pages/CartPage/Cart";
+import Checkout from "./pages/CheckoutPage/Checkout";
+import OrderConfirmation from "./pages/OrderConfirmationPage/OrderConfirmation";
 
 interface User {
   _id: string;
@@ -60,6 +62,12 @@ function App() {
             <Route path="/team" element={<Team />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/cart" element={<Cart />} />
+            {user ? (
+              <>
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/orders/:id" element={<OrderConfirmation />} />
+              </>
+            ) : null}
             {user ? (
               <>
                 <Route path="profile" element={<h1>User page</h1>} />

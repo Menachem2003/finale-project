@@ -71,4 +71,12 @@ export class CartController {
   async removeFromCart(@Request() req: any, @Param('id') productId: string) {
     return this.cartService.removeFromCart(req.user.id, productId);
   }
+
+  @Delete()
+  @ApiOperation({ summary: 'Clear entire cart' })
+  @ApiResponse({ status: 200, description: 'Cart cleared successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async clearCart(@Request() req: any) {
+    return this.cartService.clearCart(req.user.id);
+  }
 }

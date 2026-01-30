@@ -145,4 +145,28 @@ export class CartService {
 
     return updatedCart;
   }
+
+  async clearCart(userId: string) {
+    try {
+      this.logger.log(`Clearing cart for user ${userId}`);
+      
+      const cart = await this.cartModel.findOne({ userId: new Types.ObjectId(userId) });
+      
+      if (!cart) {
+        // Cart doesn't exist, create empty one
+        const newCart = new this.cartModel({ userId: new Types.ObjectId(userId), items: [] });
+        await newCart.save();
+        return newCart;
+      }
+
+      cart.items = [];
+      await cart.save();
+
+      this.logger.log(`Cart cleared successfully for user ${userId}`);
+      return cart;
+    } catch (error) {
+      this.logger.error(`Error clearing cart for user ${userId}:`, error);
+      throw new BadRequestException('Failed to clear cart');
+    }
+  }
 }

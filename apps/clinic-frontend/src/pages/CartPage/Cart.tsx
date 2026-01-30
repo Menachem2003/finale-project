@@ -223,7 +223,7 @@ function Cart() {
             <span>סה"כ לתשלום:</span>
             <span>{calculateTotal().toFixed(2)} ₪</span>
           </div>
-          <button className="checkout-btn" onClick={() => alert("תהליך התשלום יפותח בקרוב")}>
+          <button className="checkout-btn" onClick={() => navigate("/checkout")}>
             המשך לתשלום
           </button>
           <button

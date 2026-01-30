@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { CartModule } from './cart/cart.module';
+import { OrdersModule } from './orders/orders.module';
 import { CategoriesModule } from './categories/categories.module';
 import { DoctorsModule } from './doctors/doctors.module';
 import { AppointmentsModule } from './appointments/appointments.module';
@@ -42,6 +43,7 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/clinic
     UsersModule,
     ProductsModule,
     CartModule,
+    OrdersModule,
     CategoriesModule,
     DoctorsModule,
     AppointmentsModule,

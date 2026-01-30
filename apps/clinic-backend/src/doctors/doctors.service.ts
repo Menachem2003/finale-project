@@ -10,7 +10,7 @@ export class DoctorsService {
   ) {}
 
   async findAll() {
-    return this.doctorModel.find();
+    return this.doctorModel.find().populate('specialties');
   }
 
   async findOne(id: string) {

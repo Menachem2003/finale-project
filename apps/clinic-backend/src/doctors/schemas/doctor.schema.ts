@@ -22,6 +22,12 @@ export class Doctor {
   @Prop({ required: true })
   name!: string;
 
+  @Prop()
+  img?: string;
+
+  @Prop()
+  description?: string;
+
   @Prop([
     {
       type: Types.ObjectId,
