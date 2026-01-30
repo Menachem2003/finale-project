@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import Products from "./pages/ProductsPage/Products";
 import { api } from "./utils/api";
 import ProductPage from "./pages/ProductsPage/component/ProductPage";
+import Cart from "./pages/CartPage/Cart";
 
 interface User {
   _id: string;
@@ -58,6 +59,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/team" element={<Team />} />
             <Route path="/product/:id" element={<ProductPage />} />
+            <Route path="/cart" element={<Cart />} />
             {user ? (
               <>
                 <Route path="profile" element={<h1>User page</h1>} />

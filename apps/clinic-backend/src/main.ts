@@ -6,19 +6,31 @@ import { AppModule } from './app.module';
 import Logger from './utils/Logger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  try {
+    Logger.info('Starting NestJS application...');
+    Logger.info(`MongoDB URI: ${process.env.MONGODB_URI || 'mongodb://localhost:27017/clinic-store'}`);
+    
+    const app = await NestFactory.create(AppModule);
 
-  // Enable CORS
-  app.enableCors();
+    // Enable CORS with explicit configuration
+    app.enableCors({
+      origin: true, // Allow all origins (or specify your frontend URL)
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    });
 
-  // Global validation pipe
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+    // Global validation pipe
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
+      }),
+    );
 
   // Swagger configuration
   const config = new DocumentBuilder()
@@ -50,10 +62,20 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  const PORT = process.env.PORT || 3000;
-  await app.listen(PORT);
-  Logger.info(`Server is running on port http://localhost:${PORT}`);
-  Logger.info(`Swagger documentation available at http://localhost:${PORT}/api`);
+    const PORT = process.env.PORT || 3000;
+    await app.listen(PORT);
+    Logger.success(`Server is running on port http://localhost:${PORT}`);
+    Logger.info(`Swagger documentation available at http://localhost:${PORT}/api`);
+    Logger.info(`MongoDB connection: ${process.env.MONGODB_URI || 'mongodb://localhost:27017/clinic-store'}`);
+  } catch (error) {
+    Logger.error('Failed to start application:');
+    Logger.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
 }
 
-bootstrap();
+bootstrap().catch((error) => {
+  Logger.error('Unhandled error during bootstrap:');
+  Logger.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+});

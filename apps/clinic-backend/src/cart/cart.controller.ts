@@ -39,11 +39,15 @@ export class CartController {
   @Post()
   @ApiOperation({ summary: 'Add item to cart' })
   @ApiResponse({ status: 200, description: 'Item added to cart' })
-  @ApiResponse({ status: 400, description: 'Product already in cart' })
+  @ApiResponse({ status: 400, description: 'Product already in cart or validation error' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 404, description: 'Cart not found' })
+  @ApiResponse({ status: 404, description: 'Product not found' })
   async addToCart(@Request() req: any, @Body() addToCartDto: AddToCartDto) {
-    return this.cartService.addToCart(req.user.id, addToCartDto);
+    try {
+      return await this.cartService.addToCart(req.user.id, addToCartDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Put(':id')

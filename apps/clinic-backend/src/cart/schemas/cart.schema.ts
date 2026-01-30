@@ -3,13 +3,13 @@ import { Document, Types } from 'mongoose';
 
 export type CartDocument = Cart & Document;
 
-@Schema()
+@Schema({ _id: false })
 export class CartItem {
   @Prop({
     type: Types.ObjectId,
-    ref: 'products',
+    ref: 'Product',
     required: true,
-    unique: true,
+    index: false, // Explicitly disable indexing to prevent unique constraint issues
   })
   productId!: Types.ObjectId;
 
@@ -18,7 +18,6 @@ export class CartItem {
 }
 
 const CartItemSchema = SchemaFactory.createForClass(CartItem);
-CartItemSchema.set('_id', false);
 
 @Schema()
 export class Cart {
@@ -29,8 +28,15 @@ export class Cart {
   })
   userId!: Types.ObjectId;
 
-  @Prop({ type: [CartItemSchema] })
+  @Prop({ 
+    type: [CartItemSchema],
+    default: [],
+  })
   items!: CartItem[];
 }
 
 export const CartSchema = SchemaFactory.createForClass(Cart);
+
+// Remove any problematic unique indexes on items.productId
+// This prevents the E11000 duplicate key error
+CartSchema.index({ 'items.productId': 1 }, { unique: false, sparse: true });

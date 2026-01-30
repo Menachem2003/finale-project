@@ -18,6 +18,7 @@ const links: Link[] = [
   },
   { path: "/team", title: "הצוות", roles: ["guest", "user", "admin"] },
   { path: "/contact", title: "צור קשר", roles: ["guest", "user", "admin"] },
+  { path: "/cart", title: "סל קניות", roles: ["user", "admin"] },
   { path: "/login", title: "התחברות", roles: ["guest"] },
   { path: "/signup", title: "הרשמה", roles: ["guest"] },
   { path: "/admin", title: "ניהול", roles: ["admin"] },
