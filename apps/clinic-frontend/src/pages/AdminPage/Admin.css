@@ -617,6 +617,21 @@
   padding-right: 1rem;
 }
 
+.admin-users-add-form {
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #e5e7eb;
+}
+
+.admin-users-add-form h3 {
+  margin-bottom: 1rem;
+  color: #22333b;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
 /* AdminProducts Section */
 .admin-products-section {
   padding-top: 1.5rem;
@@ -631,6 +646,8 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  flex-direction: row-reverse;
+  justify-content: space-between;
 }
 
 .admin-products-loading,
@@ -644,28 +661,140 @@
   color: #dc2626;
 }
 
-.admin-products-grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 1.5rem;
+.admin-products-table-container {
+  overflow-x: auto;
+  margin-top: 1rem;
 }
 
-@media (min-width: 640px) {
-  .admin-products-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.admin-products-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-@media (min-width: 768px) {
-  .admin-products-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+.admin-products-table-header {
+  background-color: #eae0d6;
 }
 
-@media (min-width: 1024px) {
-  .admin-products-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+.admin-products-table-th {
+  padding: 0.75rem 1rem;
+  text-align: right;
+  font-weight: 600;
+  color: #22333b;
+  border-bottom: 2px solid #d1d5db;
+}
+
+.product-row,
+.product-row-editing {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.product-row:hover {
+  background-color: #f9fafb;
+}
+
+.product-row:last-child,
+.product-row-editing:last-child {
+  border-bottom: none;
+}
+
+.product-cell,
+.product-cell-editing {
+  padding: 0.75rem 1rem;
+  text-align: right;
+  vertical-align: middle;
+}
+
+.product-cell-editing input,
+.product-cell-editing select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.product-cell-editing input:focus,
+.product-cell-editing select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* AdminReferrals Styles */
+.admin-referrals-section {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.admin-referrals-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #22333b;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+
+.admin-referrals-loading,
+.admin-referrals-error {
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.admin-referrals-error {
+  color: #dc2626;
+}
+
+.admin-referrals-table-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.admin-referrals-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-referrals-table-header {
+  background-color: #eae0d6;
+}
+
+.admin-referrals-table-th {
+  padding: 0.75rem 1rem;
+  text-align: right;
+  font-weight: 600;
+  color: #22333b;
+  border-bottom: 2px solid #d1d5db;
+}
+
+.admin-referrals-table-row {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-referrals-table-row:hover {
+  background-color: #f9fafb;
+}
+
+.admin-referrals-table-row:last-child {
+  border-bottom: none;
+}
+
+.admin-referrals-table-cell {
+  padding: 0.75rem 1rem;
+  text-align: right;
+  vertical-align: middle;
 }
 
 /* ProductCard */
@@ -776,4 +905,141 @@
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   width: 100%;
+}
+
+/* Product Table Styles */
+.admin-products-table-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.admin-products-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-products-table-header {
+  background-color: #eae0d6;
+}
+
+.admin-products-table-th {
+  padding: 0.75rem 1rem;
+  text-align: right;
+  font-weight: 600;
+  color: #22333b;
+  border-bottom: 2px solid #d1d5db;
+}
+
+.product-row,
+.product-row-editing {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.product-row:hover {
+  background-color: #f9fafb;
+}
+
+.product-row:last-child,
+.product-row-editing:last-child {
+  border-bottom: none;
+}
+
+.product-cell,
+.product-cell-editing {
+  padding: 0.75rem 1rem;
+  text-align: right;
+  vertical-align: middle;
+}
+
+.product-cell-editing input,
+.product-cell-editing select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.product-cell-editing input:focus,
+.product-cell-editing select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* AdminReferrals Styles */
+.admin-referrals-section {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.admin-referrals-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #22333b;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+
+.admin-referrals-loading,
+.admin-referrals-error {
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.admin-referrals-error {
+  color: #dc2626;
+}
+
+.admin-referrals-table-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.admin-referrals-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-referrals-table-header {
+  background-color: #eae0d6;
+}
+
+.admin-referrals-table-th {
+  padding: 0.75rem 1rem;
+  text-align: right;
+  font-weight: 600;
+  color: #22333b;
+  border-bottom: 2px solid #d1d5db;
+}
+
+.admin-referrals-table-row {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-referrals-table-row:hover {
+  background-color: #f9fafb;
+}
+
+.admin-referrals-table-row:last-child {
+  border-bottom: none;
+}
+
+.admin-referrals-table-cell {
+  padding: 0.75rem 1rem;
+  text-align: right;
+  vertical-align: middle;
 }

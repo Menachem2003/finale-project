@@ -36,6 +36,10 @@ export class AppointmentsService {
     return `${hours}:${minutes}`;
   }
 
+  async getAllSpecialties() {
+    return this.specialtyModel.find();
+  }
+
   async getAvailableSlots(getAvailableSlotsDto: GetAvailableSlotsDto) {
     const { specialtyId, date } = getAvailableSlotsDto;
 

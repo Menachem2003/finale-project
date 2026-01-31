@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AdminUsers from "./components/AdminUsers";
 import AdminCategories from "./components/AdminCategories";
 import AdminProducts from "./components/AdminProducts";
+import AdminReferrals from "./components/AdminReferrals";
 import AdminSidebarButton from "./components/AdminSidebarButton";
 import { api } from "../../utils/api";
 import "./Admin.css";
@@ -11,6 +12,7 @@ const sections = [
   { id: "users", label: "משתמשים" },
   { id: "categories", label: "קטגוריות" },
   { id: "products", label: "מוצרים" },
+  { id: "referrals", label: "פניות" },
 ];
 
 export default function AdminPage() {
@@ -95,6 +97,7 @@ export default function AdminPage() {
             catError={catError}
           />
         )}
+        {currentSection === "referrals" && <AdminReferrals />}
       </main>
     </div>
   );

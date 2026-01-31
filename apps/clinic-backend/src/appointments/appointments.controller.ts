@@ -13,6 +13,13 @@ import { CreateAppointmentDto } from './dto/create-appointment.dto';
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) {}
 
+  @Get('specialties')
+  @ApiOperation({ summary: 'Get all specialties' })
+  @ApiResponse({ status: 200, description: 'Specialties retrieved successfully' })
+  async getAllSpecialties() {
+    return this.appointmentsService.getAllSpecialties();
+  }
+
   @Get('available-slots')
   @ApiOperation({ summary: 'Get available appointment slots' })
   @ApiResponse({

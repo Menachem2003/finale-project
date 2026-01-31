@@ -5,6 +5,7 @@ import { api } from "../../utils/api";
 function Contact() {
   const [message, setMessage] = useState<string>("");
   const [isError, setIsError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -22,12 +23,13 @@ function Contact() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsError(false);
+    setIsSubmitting(true);
 
     try {
       const { data } = await api.post("/contact", formData);
 
       console.log("Contact form sent:", data);
-      setMessage("הפנייה נשלחה בהצלחה! נציג המרפאה יחזור אליך בהקדם.");
+      setMessage("הפנייה נשלחה בהצלחה ונשמרה במערכת! נציג המרפאה יחזור אליך בהקדם.");
       setIsError(false);
 
       setFormData({
@@ -38,6 +40,7 @@ function Contact() {
         content: "",
       });
     } catch (error: unknown) {
+      setIsSubmitting(false);
       console.error(
         "Contact form error:",
         error && typeof error === "object" && "response" in error
@@ -46,17 +49,37 @@ function Contact() {
           ? error.message
           : "Unknown error"
       );
-      const errorMessage =
-        error &&
-        typeof error === "object" &&
-        "response" in error &&
-        (error as { response?: { data?: { message?: string } } }).response?.data
-          ?.message
-          ? (error as { response: { data: { message: string } } }).response.data
-              .message
-          : "נסה שוב מאוחר יותר";
+      let errorMessage = "נסה שוב מאוחר יותר";
+      
+      if (error && typeof error === "object" && "response" in error) {
+        const response = (error as { response?: { status?: number; data?: { message?: string | string[] } } }).response;
+        
+        if (response?.status === 404) {
+          errorMessage = "השרת לא נמצא. אנא ודא שהשרת רץ.";
+        } else if (response?.status === 400) {
+          const message = response.data?.message;
+          if (Array.isArray(message)) {
+            errorMessage = `שגיאת אימות: ${message.join(", ")}`;
+          } else if (message) {
+            errorMessage = message;
+          } else {
+            errorMessage = "שגיאת אימות. אנא בדוק שכל השדות מולאו כראוי.";
+          }
+        } else if (response?.status === 500) {
+          errorMessage = "שגיאת שרת. אנא נסה שוב מאוחר יותר.";
+        } else if (response?.data?.message) {
+          errorMessage = Array.isArray(response.data.message) 
+            ? response.data.message.join(", ")
+            : response.data.message;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
       setMessage(`שגיאה בשליחת הפנייה: ${errorMessage}`);
       setIsError(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -137,8 +160,12 @@ function Contact() {
             />
           </div>
 
-          <button type="submit" className="submitButton">
-            שלח פנייה
+          <button 
+            type="submit" 
+            className="submitButton"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "שולח..." : "שלח פנייה"}
           </button>
         </form>
 

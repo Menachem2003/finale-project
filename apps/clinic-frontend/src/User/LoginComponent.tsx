@@ -38,23 +38,48 @@ function LoginComponent() {
       nav("/");
       setMessage("התחברת בהצלחה");
     } catch (error: unknown) {
-      console.error(
-        "Login error:",
-        error && typeof error === "object" && "response" in error
-          ? (error as { response?: { data?: { message?: string } } }).response?.data
-          : error instanceof Error
-          ? error.message
-          : "Unknown error"
-      );
-      const errorMessage =
-        error &&
-        typeof error === "object" &&
-        "response" in error &&
-        (error as { response?: { data?: { message?: string } } }).response?.data
-          ?.message
-          ? (error as { response: { data: { message: string } } }).response.data
-              .message
-          : "נסה שוב מאוחר יותר";
+      console.error("Login error:", error);
+      
+      let errorMessage = "נסה שוב מאוחר יותר";
+      
+      if (error && typeof error === "object" && "response" in error) {
+        const response = (error as { response?: { status?: number; data?: { message?: string | string[] } } }).response;
+        
+        if (!response) {
+          errorMessage = "לא ניתן להתחבר לשרת. אנא ודא שהשרת רץ.";
+        } else if (response.status === 404) {
+          errorMessage = "השרת לא נמצא. אנא ודא שהשרת רץ.";
+        } else if (response.status === 401) {
+          const message = response.data?.message;
+          if (message) {
+            errorMessage = Array.isArray(message) ? message.join(", ") : message;
+          } else {
+            errorMessage = "אימייל או סיסמה שגויים";
+          }
+        } else if (response.status === 400) {
+          const message = response.data?.message;
+          if (Array.isArray(message)) {
+            errorMessage = `שגיאת אימות: ${message.join(", ")}`;
+          } else if (message) {
+            errorMessage = message;
+          } else {
+            errorMessage = "שגיאת אימות. אנא בדוק שכל השדות מולאו כראוי.";
+          }
+        } else if (response.status === 500) {
+          errorMessage = "שגיאת שרת. אנא נסה שוב מאוחר יותר.";
+        } else if (response.data?.message) {
+          errorMessage = Array.isArray(response.data.message) 
+            ? response.data.message.join(", ")
+            : response.data.message;
+        }
+      } else if (error instanceof Error) {
+        if (error.message.includes("Network Error") || error.message.includes("Failed to fetch")) {
+          errorMessage = "לא ניתן להתחבר לשרת. אנא ודא שהשרת רץ.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       setMessage(`שגיאת התחברות: ${errorMessage}`);
       setIsError(true);
     }

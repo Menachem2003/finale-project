@@ -24,12 +24,30 @@ export class OrdersService {
     try {
       this.logger.log(`Creating order for user ${userId}`);
 
-      // Validate all products exist
+      // Validate all products exist and check inventory
+      const inventoryErrors: string[] = [];
+
       for (const item of createOrderDto.items) {
         const product = await this.productModel.findById(item.productId);
         if (!product) {
           throw new NotFoundException(`Product ${item.productId} not found`);
         }
+
+        // Check inventory
+        if (product.count < item.quantity) {
+          inventoryErrors.push(
+            `Insufficient inventory for product: ${product.name}. Available: ${product.count}, Requested: ${item.quantity}`,
+          );
+        }
+      }
+
+      // If any products have insufficient inventory, throw error
+      if (inventoryErrors.length > 0) {
+        const errorMessage =
+          inventoryErrors.length === 1
+            ? inventoryErrors[0]
+            : `Multiple products have insufficient inventory:\n${inventoryErrors.join('\n')}`;
+        throw new BadRequestException(errorMessage);
       }
 
       // Create order
@@ -47,6 +65,19 @@ export class OrdersService {
       });
 
       await order.save();
+
+      // Update product inventory atomically (all products passed inventory check at this point)
+      for (const item of createOrderDto.items) {
+        await this.productModel.findByIdAndUpdate(
+          item.productId,
+          { $inc: { count: -item.quantity } },
+          { new: true },
+        );
+        this.logger.log(
+          `Updated inventory for product ${item.productId}: decremented by ${item.quantity}`,
+        );
+      }
+
       await order.populate('items.productId');
 
       this.logger.log(`Order ${order._id} created successfully`);

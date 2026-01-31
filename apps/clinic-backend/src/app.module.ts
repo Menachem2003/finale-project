@@ -11,6 +11,7 @@ import { DoctorsModule } from './doctors/doctors.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { ServicesModule } from './services/services.module';
 import { HealthModule } from './health/health.module';
+import { ReferralsModule } from './referrals/referrals.module';
 import Logger from './utils/Logger';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/clinic-store';
@@ -48,6 +49,7 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/clinic
     DoctorsModule,
     AppointmentsModule,
     ServicesModule,
+    ReferralsModule,
   ],
 })
 export class AppModule {}

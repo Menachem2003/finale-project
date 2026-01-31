@@ -83,3 +83,15 @@ export interface LoginResponse {
   user: User;
   token: string;
 }
+
+export interface Referral {
+  _id: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  reason: string;
+  content: string;
+  status: 'new' | 'read' | 'responded';
+  createdAt?: Date;
+  updatedAt?: Date;
+}
