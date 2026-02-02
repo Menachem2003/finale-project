@@ -36,11 +36,13 @@ Before you begin, ensure you have the following installed:
 ## Installation
 
 1. **Clone the repository** (if applicable) or navigate to the project directory:
+
    ```bash
    cd clinic
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
@@ -59,27 +61,33 @@ Before you begin, ensure you have the following installed:
 ### Running the Applications
 
 #### Start Backend Server
+
 ```bash
 npm run dev:backend
 # or
 nx serve clinic-backend
 ```
+
 The backend will run on `http://localhost:3000`
 
 #### Start Frontend Application
+
 ```bash
 npm run dev:frontend
 # or
 nx serve clinic-frontend
 ```
+
 The frontend will run on `http://localhost:4200`
 
 #### Run Both Simultaneously
+
 Open two terminal windows and run each command separately, or use a process manager like `concurrently`.
 
 ### Building for Production
 
 #### Build All Applications
+
 ```bash
 npm run build
 # or
@@ -87,6 +95,7 @@ nx run-many --target=build --all
 ```
 
 #### Build Individual Applications
+
 ```bash
 npm run build:frontend
 npm run build:backend
@@ -98,27 +107,32 @@ nx build clinic-backend
 ## Available Nx Commands
 
 ### Development
+
 - `nx serve clinic-backend` - Start backend development server (port 3000)
 - `nx serve clinic-frontend` - Start frontend development server (port 4200)
 - `nx serve <app-name>` - Start development server for any app
 
 ### Building
+
 - `nx build clinic-backend` - Build backend for production
 - `nx build clinic-frontend` - Build frontend for production
 - `nx build <app-name>` - Build any application for production
 - `nx run-many --target=build --all` - Build all applications
 
 ### Code Quality
+
 - `nx lint clinic-backend` - Lint backend code
 - `nx lint clinic-frontend` - Lint frontend code
 - `nx lint <app-name>` - Lint any application
 - `nx run-many --target=lint --all` - Lint all projects
 
 ### Testing
+
 - `nx test <app-name>` - Run tests for an application
 - `nx run-many --target=test --all` - Run tests for all projects
 
 ### Utilities
+
 - `nx graph` - Visualize project dependencies
 - `nx reset` - Clear Nx cache
 - `nx run-many --target=<target> --all` - Run any target for all projects
@@ -126,6 +140,7 @@ nx build clinic-backend
 ## Project Architecture
 
 ### Frontend (`apps/clinic-frontend`)
+
 - **Framework**: React 19 with TypeScript
 - **Build Tool**: Vite
 - **Routing**: React Router DOM
@@ -134,20 +149,29 @@ nx build clinic-backend
 - **Styling**: CSS modules
 
 **Key Features**:
+
 - User authentication (login/signup)
 - Product catalog with filtering
 - Shopping cart functionality
-- Admin dashboard
+- Order management and payment processing
+- Admin dashboard with:
+  - User management
+  - Category management
+  - Product management
+  - Contact form submissions (referrals)
+  - Purchase history (all orders)
 - Contact form
 - Team page
 
 ### Backend (`apps/clinic-backend`)
+
 - **Framework**: Express.js with TypeScript
 - **Database**: MongoDB with Mongoose
 - **Authentication**: JWT (JSON Web Tokens)
 - **Password Hashing**: bcrypt
 
 **API Endpoints**:
+
 - `GET /health` - Health check (requires authentication)
 - `POST /auth/login` - User login
 - `POST /auth/signup` - User registration
@@ -163,6 +187,14 @@ nx build clinic-backend
 - `POST /cart` - Add item to cart (requires authentication)
 - `PUT /cart` - Update cart (requires authentication)
 - `DELETE /cart/:productId` - Remove item from cart (requires authentication)
+- `POST /orders` - Create order from cart (requires authentication)
+- `POST /orders/:id/payment` - Process payment for order (requires authentication)
+- `GET /orders` - Get user's orders (requires authentication)
+- `GET /orders/all` - Get all orders (admin only)
+- `GET /orders/:id` - Get specific order by ID (requires authentication)
+- `POST /contact` - Submit contact form (public endpoint)
+- `GET /referrals` - Get all referrals (admin only)
+- `PUT /referrals/:id/status` - Update referral status (admin only)
 - `GET /services` - Get all services
 - `POST /services` - Create service (admin only)
 - `GET /doctors` - Get all doctors
@@ -170,18 +202,24 @@ nx build clinic-backend
 - `POST /appointments` - Create appointment (requires authentication)
 
 ### Shared Library (`libs/shared`)
+
 Contains shared TypeScript interfaces and types used across both frontend and backend:
+
 - `User` - User interface
 - `Product` - Product interface
 - `Service` - Service interface
 - `Category` - Category interface
 - `Cart` - Shopping cart interface
+- `Order` - Order interface with items, payment status, and order status
+- `OrderItem` - Order item interface
+- `Referral` - Contact form submission interface
 - `Appointment` - Appointment interface
 - And more...
 
 ## TypeScript Configuration
 
 The project is **fully converted to TypeScript** and uses **strict TypeScript mode** with the following key settings:
+
 - `strict: true`
 - `noImplicitAny: true`
 - `strictNullChecks: true`
@@ -194,6 +232,7 @@ The project is **fully converted to TypeScript** and uses **strict TypeScript mo
 - `noFallthroughCasesInSwitch: true`
 
 ### Module System
+
 - **Backend**: Uses ES Modules (ESM) with `.js` extensions in imports (TypeScript requirement for ESM)
 - **Frontend**: Uses ES Modules with React JSX support
 - **Shared Library**: Common types exported for use across applications
@@ -202,10 +241,11 @@ The project is **fully converted to TypeScript** and uses **strict TypeScript mo
 
 1. **Install MongoDB** (if not already installed)
 2. **Start MongoDB service**:
+
    ```bash
    # On Windows
    net start MongoDB
-   
+
    # On macOS/Linux
    sudo systemctl start mongod
    # or
@@ -217,43 +257,52 @@ The project is **fully converted to TypeScript** and uses **strict TypeScript mo
 ## Environment Variables
 
 ### Backend
+
 - `MONGODB_URI` - MongoDB connection string (default: `mongodb://localhost:27017/clinic-store`)
 - `JWT_SECRET` - Secret key for JWT tokens (default: `secret`)
 - `PORT` - Server port (default: `3000`)
 
 ### Frontend
+
 - `VITE_API_BASE_URL` - Backend API URL (default: `http://localhost:3000`)
 
 ## Troubleshooting
 
 ### MongoDB Connection Issues
+
 - Ensure MongoDB is running: `mongod --version`
 - Check connection string in `.env` or `dbConnection.ts`
 - Verify MongoDB is accessible on the configured port
 
 ### Port Already in Use
+
 - Change the port in `vite.config.ts` (frontend) or `main.ts` (backend)
 - Or stop the process using the port
 
 ### TypeScript Errors
+
 - Run `npm install` to ensure all type definitions are installed
 - Check `tsconfig.json` files for correct configuration
 - Ensure all imports use correct file extensions (`.ts`, `.tsx`)
 
 ### Build Errors
+
 - Clear Nx cache: `nx reset`
-- Delete `node_modules` and reinstall: 
+- Delete `node_modules` and reinstall:
+
   ```bash
   # Windows PowerShell
   Remove-Item -Recurse -Force node_modules; npm install
-  
+
   # macOS/Linux
   rm -rf node_modules && npm install
   ```
+
 - Check for TypeScript errors: `nx run-many --target=lint --all`
 - Verify TypeScript configuration: Check `tsconfig.base.json` and app-specific `tsconfig.json` files
 
 ### Module Import Errors
+
 - Ensure imports use `.js` extension for backend files (required for ES modules)
 - Frontend imports should use relative paths without extensions
 - Shared library imports use `@clinic/shared` alias

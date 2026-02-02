@@ -91,7 +91,26 @@ export interface Referral {
   phone: string;
   reason: string;
   content: string;
-  status: 'new' | 'read' | 'responded';
+  status: "new" | "read" | "responded";
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface OrderItem {
+  productId: string | Product;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  _id: string;
+  userId: string | User;
+  items: OrderItem[];
+  total: number;
+  status: "pending" | "completed" | "cancelled";
+  paymentStatus: "pending" | "paid" | "failed";
+  paymentMethod: string;
+  transactionId?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

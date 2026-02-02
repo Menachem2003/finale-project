@@ -3,6 +3,7 @@ import AdminUsers from "./components/AdminUsers";
 import AdminCategories from "./components/AdminCategories";
 import AdminProducts from "./components/AdminProducts";
 import AdminReferrals from "./components/AdminReferrals";
+import AdminOrders from "./components/AdminOrders";
 import AdminSidebarButton from "./components/AdminSidebarButton";
 import { api } from "../../utils/api";
 import "./Admin.css";
@@ -13,6 +14,7 @@ const sections = [
   { id: "categories", label: "קטגוריות" },
   { id: "products", label: "מוצרים" },
   { id: "referrals", label: "פניות" },
+  { id: "orders", label: "רכישות" },
 ];
 
 export default function AdminPage() {
@@ -98,6 +100,7 @@ export default function AdminPage() {
           />
         )}
         {currentSection === "referrals" && <AdminReferrals />}
+        {currentSection === "orders" && <AdminOrders />}
       </main>
     </div>
   );

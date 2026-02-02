@@ -1,5 +1,5 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Document, Types } from "mongoose";
 
 export type OrderDocument = Order & Document;
 
@@ -7,7 +7,7 @@ export type OrderDocument = Order & Document;
 export class OrderItem {
   @Prop({
     type: Types.ObjectId,
-    ref: 'Product',
+    ref: "Product",
     required: true,
   })
   productId!: Types.ObjectId;
@@ -25,7 +25,7 @@ const OrderItemSchema = SchemaFactory.createForClass(OrderItem);
 export class Order {
   @Prop({
     type: Types.ObjectId,
-    ref: 'users',
+    ref: "User",
     required: true,
   })
   userId!: Types.ObjectId;
@@ -38,19 +38,19 @@ export class Order {
 
   @Prop({
     type: String,
-    enum: ['pending', 'completed', 'cancelled'],
-    default: 'pending',
+    enum: ["pending", "completed", "cancelled"],
+    default: "pending",
   })
   status!: string;
 
   @Prop({
     type: String,
-    enum: ['pending', 'paid', 'failed'],
-    default: 'pending',
+    enum: ["pending", "paid", "failed"],
+    default: "pending",
   })
   paymentStatus!: string;
 
-  @Prop({ type: String, default: 'mock' })
+  @Prop({ type: String, default: "mock" })
   paymentMethod!: string;
 
   @Prop({ type: String })

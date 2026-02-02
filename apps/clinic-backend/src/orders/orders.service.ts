@@ -3,13 +3,13 @@ import {
   NotFoundException,
   BadRequestException,
   Logger,
-} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-import { Order, OrderDocument } from './schemas/order.schema';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { ProcessPaymentDto } from './dto/process-payment.dto';
-import { Product, ProductDocument } from '../products/schemas/product.schema';
+} from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model, Types } from "mongoose";
+import { Order, OrderDocument } from "./schemas/order.schema";
+import { CreateOrderDto } from "./dto/create-order.dto";
+import { ProcessPaymentDto } from "./dto/process-payment.dto";
+import { Product, ProductDocument } from "../products/schemas/product.schema";
 
 @Injectable()
 export class OrdersService {
@@ -17,7 +17,7 @@ export class OrdersService {
 
   constructor(
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
-    @InjectModel(Product.name) private productModel: Model<ProductDocument>,
+    @InjectModel(Product.name) private productModel: Model<ProductDocument>
   ) {}
 
   async createOrder(userId: string, createOrderDto: CreateOrderDto) {
@@ -36,7 +36,7 @@ export class OrdersService {
         // Check inventory
         if (product.count < item.quantity) {
           inventoryErrors.push(
-            `Insufficient inventory for product: ${product.name}. Available: ${product.count}, Requested: ${item.quantity}`,
+            `Insufficient inventory for product: ${product.name}. Available: ${product.count}, Requested: ${item.quantity}`
           );
         }
       }
@@ -46,7 +46,9 @@ export class OrdersService {
         const errorMessage =
           inventoryErrors.length === 1
             ? inventoryErrors[0]
-            : `Multiple products have insufficient inventory:\n${inventoryErrors.join('\n')}`;
+            : `Multiple products have insufficient inventory:\n${inventoryErrors.join(
+                "\n"
+              )}`;
         throw new BadRequestException(errorMessage);
       }
 
@@ -59,9 +61,9 @@ export class OrdersService {
           price: item.price,
         })),
         total: createOrderDto.total,
-        status: 'pending',
-        paymentStatus: 'pending',
-        paymentMethod: 'mock',
+        status: "pending",
+        paymentStatus: "pending",
+        paymentMethod: "mock",
       });
 
       await order.save();
@@ -71,24 +73,27 @@ export class OrdersService {
         await this.productModel.findByIdAndUpdate(
           item.productId,
           { $inc: { count: -item.quantity } },
-          { new: true },
+          { new: true }
         );
         this.logger.log(
-          `Updated inventory for product ${item.productId}: decremented by ${item.quantity}`,
+          `Updated inventory for product ${item.productId}: decremented by ${item.quantity}`
         );
       }
 
-      await order.populate('items.productId');
+      await order.populate("items.productId");
 
       this.logger.log(`Order ${order._id} created successfully`);
 
       return order;
     } catch (error) {
       this.logger.error(`Error creating order for user ${userId}:`, error);
-      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
         throw error;
       }
-      throw new BadRequestException('Failed to create order');
+      throw new BadRequestException("Failed to create order");
     }
   }
 
@@ -98,11 +103,11 @@ export class OrdersService {
 
       const order = await this.orderModel.findById(orderId);
       if (!order) {
-        throw new NotFoundException('Order not found');
+        throw new NotFoundException("Order not found");
       }
 
-      if (order.paymentStatus === 'paid') {
-        throw new BadRequestException('Order already paid');
+      if (order.paymentStatus === "paid") {
+        throw new BadRequestException("Order already paid");
       }
 
       // Mock payment processing - simulate 2 second delay
@@ -110,27 +115,32 @@ export class OrdersService {
 
       // Mock payment: 95% success rate
       const paymentSuccess = Math.random() > 0.05;
-      const transactionId = `TXN-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+      const transactionId = `TXN-${Date.now()}-${Math.random()
+        .toString(36)
+        .substr(2, 9)
+        .toUpperCase()}`;
 
       if (paymentSuccess) {
-        order.paymentStatus = 'paid';
-        order.status = 'completed';
+        order.paymentStatus = "paid";
+        order.status = "completed";
         order.transactionId = transactionId;
-        order.paymentMethod = processPaymentDto.paymentMethod || 'mock';
+        order.paymentMethod = processPaymentDto.paymentMethod || "mock";
 
         await order.save();
-        await order.populate('items.productId');
+        await order.populate("items.productId");
 
-        this.logger.log(`Payment successful for order ${orderId}, transaction: ${transactionId}`);
+        this.logger.log(
+          `Payment successful for order ${orderId}, transaction: ${transactionId}`
+        );
 
         return {
           success: true,
           order,
           transactionId,
-          message: 'Payment processed successfully',
+          message: "Payment processed successfully",
         };
       } else {
-        order.paymentStatus = 'failed';
+        order.paymentStatus = "failed";
         await order.save();
 
         this.logger.warn(`Payment failed for order ${orderId}`);
@@ -138,15 +148,36 @@ export class OrdersService {
         return {
           success: false,
           order,
-          message: 'Payment processing failed. Please try again.',
+          message: "Payment processing failed. Please try again.",
         };
       }
     } catch (error) {
-      this.logger.error(`Error processing payment for order ${orderId}:`, error);
-      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+      this.logger.error(
+        `Error processing payment for order ${orderId}:`,
+        error
+      );
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
         throw error;
       }
-      throw new BadRequestException('Failed to process payment');
+      throw new BadRequestException("Failed to process payment");
+    }
+  }
+
+  async getAllOrders() {
+    try {
+      const orders = await this.orderModel
+        .find()
+        .populate("items.productId")
+        .populate("userId", "name email")
+        .sort({ createdAt: -1 });
+
+      return orders;
+    } catch (error) {
+      this.logger.error("Error getting all orders:", error);
+      throw new BadRequestException("Failed to retrieve all orders");
     }
   }
 
@@ -154,13 +185,13 @@ export class OrdersService {
     try {
       const orders = await this.orderModel
         .find({ userId: new Types.ObjectId(userId) })
-        .populate('items.productId')
+        .populate("items.productId")
         .sort({ createdAt: -1 });
 
       return orders;
     } catch (error) {
       this.logger.error(`Error getting orders for user ${userId}:`, error);
-      throw new BadRequestException('Failed to retrieve orders');
+      throw new BadRequestException("Failed to retrieve orders");
     }
   }
 
@@ -171,19 +202,22 @@ export class OrdersService {
           _id: new Types.ObjectId(orderId),
           userId: new Types.ObjectId(userId),
         })
-        .populate('items.productId');
+        .populate("items.productId");
 
       if (!order) {
-        throw new NotFoundException('Order not found');
+        throw new NotFoundException("Order not found");
       }
 
       return order;
     } catch (error) {
-      this.logger.error(`Error getting order ${orderId} for user ${userId}:`, error);
+      this.logger.error(
+        `Error getting order ${orderId} for user ${userId}:`,
+        error
+      );
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new BadRequestException('Failed to retrieve order');
+      throw new BadRequestException("Failed to retrieve order");
     }
   }
 
@@ -192,11 +226,11 @@ export class OrdersService {
       const order = await this.orderModel.findByIdAndUpdate(
         orderId,
         { status },
-        { new: true },
+        { new: true }
       );
 
       if (!order) {
-        throw new NotFoundException('Order not found');
+        throw new NotFoundException("Order not found");
       }
 
       return order;
@@ -205,7 +239,7 @@ export class OrdersService {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new BadRequestException('Failed to update order status');
+      throw new BadRequestException("Failed to update order status");
     }
   }
 }
