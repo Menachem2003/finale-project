@@ -2,6 +2,8 @@
 
 A full-stack dental clinic management system built with React, Express, MongoDB, and Nx monorepo architecture.
 
+📖 **For detailed information about technologies and technical decisions, see [TECHNOLOGIES.md](./TECHNOLOGIES.md)** (Hebrew)
+
 ## 🎯 Project Status
 
 ✅ **Fully converted to TypeScript** - All code is now written in TypeScript with strict type checking  
