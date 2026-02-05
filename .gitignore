@@ -35,6 +35,7 @@ yarn-error.log*
 # Nx
 .nx/cache
 .nx/workspace-data
+tmp/
 
 # IDEs
 .idea/

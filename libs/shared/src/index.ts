@@ -44,10 +44,21 @@ export interface Cart {
   items: CartItem[];
 }
 
+export interface TeamMember {
+  _id: string;
+  name: string;
+  img?: string;
+  description?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface Doctor {
   _id: string;
   name: string;
-  specialties: string[];
+  img?: string;
+  description?: string;
+  specialties: Array<{ _id: string; specialtyName: string }> | string[];
   workingHours: Array<{
     day: string;
     workStart: string;

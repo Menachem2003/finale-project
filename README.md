@@ -2,8 +2,6 @@
 
 A full-stack dental clinic management system built with React, Express, MongoDB, and Nx monorepo architecture.
 
-📖 **For detailed information about technologies and technical decisions, see [TECHNOLOGIES.md](./TECHNOLOGIES.md)** (Hebrew)
-
 ## 🎯 Project Status
 
 ✅ **Fully converted to TypeScript** - All code is now written in TypeScript with strict type checking  
@@ -155,13 +153,7 @@ nx build clinic-backend
 - User authentication (login/signup)
 - Product catalog with filtering
 - Shopping cart functionality
-- Order management and payment processing
-- Admin dashboard with:
-  - User management
-  - Category management
-  - Product management
-  - Contact form submissions (referrals)
-  - Purchase history (all orders)
+- Admin dashboard
 - Contact form
 - Team page
 
@@ -189,14 +181,6 @@ nx build clinic-backend
 - `POST /cart` - Add item to cart (requires authentication)
 - `PUT /cart` - Update cart (requires authentication)
 - `DELETE /cart/:productId` - Remove item from cart (requires authentication)
-- `POST /orders` - Create order from cart (requires authentication)
-- `POST /orders/:id/payment` - Process payment for order (requires authentication)
-- `GET /orders` - Get user's orders (requires authentication)
-- `GET /orders/all` - Get all orders (admin only)
-- `GET /orders/:id` - Get specific order by ID (requires authentication)
-- `POST /contact` - Submit contact form (public endpoint)
-- `GET /referrals` - Get all referrals (admin only)
-- `PUT /referrals/:id/status` - Update referral status (admin only)
 - `GET /services` - Get all services
 - `POST /services` - Create service (admin only)
 - `GET /doctors` - Get all doctors
@@ -212,9 +196,6 @@ Contains shared TypeScript interfaces and types used across both frontend and ba
 - `Service` - Service interface
 - `Category` - Category interface
 - `Cart` - Shopping cart interface
-- `Order` - Order interface with items, payment status, and order status
-- `OrderItem` - Order item interface
-- `Referral` - Contact form submission interface
 - `Appointment` - Appointment interface
 - And more...
 

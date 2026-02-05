@@ -4,6 +4,8 @@ import AdminCategories from "./components/AdminCategories";
 import AdminProducts from "./components/AdminProducts";
 import AdminReferrals from "./components/AdminReferrals";
 import AdminOrders from "./components/AdminOrders";
+import AdminDoctors from "./components/AdminDoctors";
+import AdminTeam from "./components/AdminTeam";
 import AdminSidebarButton from "./components/AdminSidebarButton";
 import { api } from "../../utils/api";
 import "./Admin.css";
@@ -15,6 +17,8 @@ const sections = [
   { id: "products", label: "מוצרים" },
   { id: "referrals", label: "פניות" },
   { id: "orders", label: "רכישות" },
+  { id: "doctors", label: "רופאים" },
+  { id: "team", label: "צוות" },
 ];
 
 export default function AdminPage() {
@@ -101,6 +105,8 @@ export default function AdminPage() {
         )}
         {currentSection === "referrals" && <AdminReferrals />}
         {currentSection === "orders" && <AdminOrders />}
+        {currentSection === "doctors" && <AdminDoctors />}
+        {currentSection === "team" && <AdminTeam />}
       </main>
     </div>
   );

@@ -9,6 +9,7 @@ import { Model } from 'mongoose';
 import { Referral, ReferralDocument } from './schemas/referral.schema';
 import { CreateReferralDto } from './dto/create-referral.dto';
 import { UpdateReferralStatusDto } from './dto/update-referral-status.dto';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class ReferralsService {
@@ -16,12 +17,31 @@ export class ReferralsService {
 
   constructor(
     @InjectModel(Referral.name) private referralModel: Model<ReferralDocument>,
+    private readonly emailService: EmailService,
   ) {}
 
   async create(createReferralDto: CreateReferralDto) {
     try {
       const referral = new this.referralModel(createReferralDto);
       const savedReferral = await referral.save();
+
+      // Send confirmation email to customer
+      try {
+        const emailSent = await this.emailService.sendReferralConfirmation(
+          savedReferral.email,
+          savedReferral.fullName,
+          savedReferral.reason,
+        );
+        if (emailSent) {
+          this.logger.log(`Confirmation email sent to ${savedReferral.email}`);
+        } else {
+          this.logger.warn(`Failed to send confirmation email to ${savedReferral.email}`);
+        }
+      } catch (emailError) {
+        // Don't fail the referral creation if email fails
+        this.logger.error(`Error sending confirmation email to ${savedReferral.email}:`, emailError);
+      }
+
       return savedReferral;
     } catch (err: any) {
       this.logger.error('Create referral error:', err);
