@@ -24,6 +24,7 @@ interface Order {
   paymentStatus: string;
   paymentMethod: string;
   transactionId?: string;
+  paypalOrderId?: string;
   createdAt: string;
 }
 
@@ -161,10 +162,24 @@ function OrderConfirmation() {
               {getPaymentStatusText(order.paymentStatus)}
             </span>
           </div>
+          {order.paypalOrderId && (
+            <div className="info-row">
+              <span className="info-label">מספר הזמנת PayPal:</span>
+              <span className="info-value">{order.paypalOrderId}</span>
+            </div>
+          )}
           {order.transactionId && (
             <div className="info-row">
               <span className="info-label">מספר עסקה:</span>
               <span className="info-value">{order.transactionId}</span>
+            </div>
+          )}
+          {order.paymentMethod && (
+            <div className="info-row">
+              <span className="info-label">אמצעי תשלום:</span>
+              <span className="info-value">
+                {order.paymentMethod === "paypal" ? "PayPal" : order.paymentMethod}
+              </span>
             </div>
           )}
         </div>

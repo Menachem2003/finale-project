@@ -47,14 +47,32 @@ Before you begin, ensure you have the following installed:
    npm install
    ```
 
-3. **Set up environment variables** (optional):
-   Create a `.env` file in the root directory:
+3. **Set up environment variables**:
+   Create a `.env` file in the **root directory** of the project (not in `apps/clinic-frontend/`):
    ```env
    MONGODB_URI=mongodb://localhost:27017/clinic-store
    JWT_SECRET=your-secret-key-here
    PORT=3000
    VITE_API_BASE_URL=http://localhost:3000
+   
+   # PayPal Configuration (required for payments)
+   PAYPAL_CLIENT_ID=your_paypal_client_id
+   PAYPAL_CLIENT_SECRET=your_paypal_client_secret
+   PAYPAL_MODE=sandbox
+   FRONTEND_URL=http://localhost:5173
+   VITE_PAYPAL_CLIENT_ID=your_paypal_client_id
    ```
+   
+   **Important:** The Vite configuration is set to load `.env` files from the project root directory automatically. Make sure to create the `.env` file in the root directory (where `package.json` is located), not in the `apps/clinic-frontend/` folder.
+   
+   **To get PayPal Sandbox credentials:**
+   1. Go to https://developer.paypal.com/
+   2. Sign in or create an account
+   3. Navigate to Dashboard > My Apps & Credentials
+   4. Create a new Sandbox App
+   5. Copy the Client ID and Secret
+   6. Add them to your `.env` file
+   7. **Restart the frontend server** after adding environment variables for changes to take effect
 
 ## Development
 
@@ -244,10 +262,15 @@ The project is **fully converted to TypeScript** and uses **strict TypeScript mo
 - `MONGODB_URI` - MongoDB connection string (default: `mongodb://localhost:27017/clinic-store`)
 - `JWT_SECRET` - Secret key for JWT tokens (default: `secret`)
 - `PORT` - Server port (default: `3000`)
+- `PAYPAL_CLIENT_ID` - PayPal Client ID (required for payments)
+- `PAYPAL_CLIENT_SECRET` - PayPal Client Secret (required for payments)
+- `PAYPAL_MODE` - PayPal mode: `sandbox` or `live` (default: `sandbox`)
+- `FRONTEND_URL` - Frontend URL for PayPal redirects (default: `http://localhost:5173`)
 
 ### Frontend
 
 - `VITE_API_BASE_URL` - Backend API URL (default: `http://localhost:3000`)
+- `VITE_PAYPAL_CLIENT_ID` - PayPal Client ID for frontend SDK (required for payments)
 
 ## Troubleshooting
 

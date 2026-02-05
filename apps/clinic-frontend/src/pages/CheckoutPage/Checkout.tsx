@@ -1,8 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
 import "./Checkout.css";
 import type { Product } from "@clinic/shared";
+
+declare global {
+  interface Window {
+    paypal?: any;
+  }
+}
 
 interface CartItem {
   productId: {
@@ -27,9 +33,61 @@ function Checkout() {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [cardholderName, setCardholderName] = useState("");
+  const [order, setOrder] = useState<any>(null);
+  const [paypalOrderId, setPaypalOrderId] = useState<string | null>(null);
+  const [paypalSDKLoaded, setPaypalSDKLoaded] = useState(false);
+  const paypalButtonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const loadPayPalSDK = async (): Promise<boolean> => {
+      if (window.paypal) {
+        setPaypalSDKLoaded(true);
+        return true;
+      }
+
+      const clientId = import.meta.env.VITE_PAYPAL_CLIENT_ID;
+      if (!clientId || clientId === "YOUR_CLIENT_ID" || clientId === "your_paypal_client_id" || clientId.trim() === "") {
+        console.warn("PayPal Client ID not configured - PayPal payment will not be available");
+        return false;
+      }
+
+      return new Promise<boolean>((resolve) => {
+        // Check if script already exists
+        const existingScript = document.querySelector(`script[src*="paypal.com/sdk"]`);
+        if (existingScript) {
+          if (window.paypal) {
+            setPaypalSDKLoaded(true);
+            resolve(true);
+            return;
+          }
+          // Wait a bit for existing script to load
+          setTimeout(() => {
+            if (window.paypal) {
+              setPaypalSDKLoaded(true);
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          }, 1000);
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=ILS`;
+        script.async = true;
+        script.onload = () => {
+          setPaypalSDKLoaded(true);
+          resolve(true);
+        };
+        script.onerror = () => {
+          console.error("Failed to load PayPal SDK");
+          setError("שגיאה בטעינת PayPal SDK. אנא בדוק את החיבור לאינטרנט.");
+          resolve(false);
+        };
+        document.head.appendChild(script);
+      });
+    };
+
     const fetchCart = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -39,6 +97,11 @@ function Checkout() {
 
       try {
         setLoading(true);
+        setError(null);
+        
+        // Load PayPal SDK first
+        await loadPayPalSDK();
+        
         const response = await api.get("/cart", {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -55,12 +118,19 @@ function Checkout() {
         if (
           err &&
           typeof err === "object" &&
-          "response" in err &&
-          (err as { response?: { status?: number } }).response?.status === 401
+          "response" in err
         ) {
-          navigate("/login");
+          const response = err as { response?: { status?: number; data?: { message?: string } } };
+          
+          if (response.response?.status === 401) {
+            navigate("/login");
+            return;
+          }
+          
+          const errorMessage = response.response?.data?.message || "שגיאה בטעינת הסל";
+          setError(errorMessage);
         } else {
-          setError("שגיאה בטעינת הסל");
+          setError("שגיאה בטעינת הסל. אנא נסה שוב מאוחר יותר.");
         }
       } finally {
         setLoading(false);
@@ -78,22 +148,113 @@ function Checkout() {
     );
   };
 
-  const handlePayment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  useEffect(() => {
+    const initializePayPal = async () => {
+      if (!order || !paypalOrderId || !paypalSDKLoaded || !window.paypal) {
+        return;
+      }
+
+      // Clear existing buttons
+      if (paypalButtonRef.current) {
+        paypalButtonRef.current.innerHTML = "";
+      }
+
+      try {
+        window.paypal
+          .Buttons({
+            createOrder: () => {
+              return paypalOrderId;
+            },
+            onApprove: async (data: any, actions: any) => {
+              try {
+                setProcessing(true);
+                const token = localStorage.getItem("token");
+                if (!token) {
+                  navigate("/login");
+                  return;
+                }
+
+                // Capture the payment
+                const captureResponse = await api.post(
+                  `/orders/${order._id}/payment/capture`,
+                  { paypalOrderId },
+                  {
+                    headers: { Authorization: `Bearer ${token}` },
+                  }
+                );
+
+                if (captureResponse.data.success) {
+                  // Clear cart
+                  await api.delete("/cart", {
+                    headers: { Authorization: `Bearer ${token}` },
+                  });
+
+                  // Redirect to order confirmation
+                  navigate(`/orders/${order._id}`);
+                } else {
+                  setError(
+                    captureResponse.data.message ||
+                      "תהליך התשלום נכשל. אנא נסה שוב."
+                  );
+                  setProcessing(false);
+                }
+              } catch (err: unknown) {
+                console.error("Payment capture error:", err);
+                setError("שגיאה בעיבוד התשלום. אנא נסה שוב מאוחר יותר.");
+                setProcessing(false);
+              }
+            },
+            onError: (err: any) => {
+              console.error("PayPal error:", err);
+              setError("שגיאה בתהליך התשלום של PayPal. אנא נסה שוב.");
+              setProcessing(false);
+            },
+            onCancel: () => {
+              setError("התשלום בוטל על ידי המשתמש.");
+            },
+          })
+          .render(paypalButtonRef.current);
+      } catch (err) {
+        console.error("Error initializing PayPal:", err);
+        setError("שגיאה בטעינת PayPal. אנא רענן את הדף.");
+      }
+    };
+
+    initializePayPal();
+  }, [order, paypalOrderId, paypalSDKLoaded, navigate]);
+
+  const handleCreateOrder = async () => {
     if (!cart || !cart.items || cart.items.length === 0) {
       alert("הסל ריק");
-      return;
-    }
-
-    if (!cardholderName.trim()) {
-      alert("אנא הזן את שם בעל הכרטיס");
       return;
     }
 
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
+      return;
+    }
+
+    // Check if PayPal SDK is loaded
+    const clientId = import.meta.env.VITE_PAYPAL_CLIENT_ID;
+    if (!clientId || clientId === "YOUR_CLIENT_ID" || clientId === "your_paypal_client_id" || clientId.trim() === "") {
+      setError(
+        "PayPal לא מוגדר.\n\n" +
+        "אנא פתח את קובץ .env בתיקיית השורש של הפרויקט והחלף את 'your_paypal_client_id' בערך האמיתי של PayPal Client ID שלך.\n\n" +
+        "לקבלת PayPal Sandbox credentials:\n" +
+        "1. היכנס ל-https://developer.paypal.com/\n" +
+        "2. צור Sandbox Account\n" +
+        "3. קבל Client ID מה-App שלך\n" +
+        "4. החלף את הערך בקובץ .env\n" +
+        "5. הפעל מחדש את שרת ה-frontend"
+      );
+      setProcessing(false);
+      return;
+    }
+
+    if (!paypalSDKLoaded || !window.paypal) {
+      setError("PayPal SDK לא נטען. אנא רענן את הדף או בדוק את החיבור לאינטרנט.");
+      setProcessing(false);
       return;
     }
 
@@ -119,51 +280,43 @@ function Checkout() {
         }
       );
 
-      const order = createOrderResponse.data;
+      const createdOrder = createOrderResponse.data;
+      setOrder(createdOrder);
 
-      // Step 2: Process payment
-      const paymentResponse = await api.post(
-        `/orders/${order._id}/payment`,
-        {
-          paymentMethod: "mock",
-          cardholderName: cardholderName.trim(),
-        },
+      // Step 2: Create PayPal order
+      const paypalOrderResponse = await api.post(
+        `/orders/${createdOrder._id}/payment/create`,
+        {},
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      if (paymentResponse.data.success) {
-        // Step 3: Clear cart
-        await api.delete("/cart", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        // Step 4: Redirect to order confirmation
-        navigate(`/orders/${order._id}`);
-      } else {
-        setError(paymentResponse.data.message || "תהליך התשלום נכשל. אנא נסה שוב.");
-        setProcessing(false);
-      }
+      setPaypalOrderId(paypalOrderResponse.data.paypalOrderId);
+      setProcessing(false);
     } catch (err: unknown) {
-      console.error("Payment error:", err);
-      
+      console.error("Order creation error:", err);
+
       if (
         err &&
         typeof err === "object" &&
         "response" in err
       ) {
-        const response = err as { response?: { status?: number; data?: { message?: string } } };
-        
+        const response = err as {
+          response?: { status?: number; data?: { message?: string } };
+        };
+
         if (response.response?.status === 401) {
           navigate("/login");
           return;
         }
-        
-        const errorMessage = response.response?.data?.message || "שגיאה בעיבוד התשלום. אנא נסה שוב מאוחר יותר.";
+
+        const errorMessage =
+          response.response?.data?.message ||
+          "שגיאה ביצירת ההזמנה. אנא נסה שוב מאוחר יותר.";
         setError(errorMessage);
       } else {
-        setError("שגיאה בעיבוד התשלום. אנא נסה שוב מאוחר יותר.");
+        setError("שגיאה ביצירת ההזמנה. אנא נסה שוב מאוחר יותר.");
       }
       setProcessing(false);
     }
@@ -230,46 +383,71 @@ function Checkout() {
 
         <div className="checkout-form-container">
           <h2>פרטי תשלום</h2>
-          <form onSubmit={handlePayment} className="checkout-form">
-            <div className="form-group">
-              <label htmlFor="cardholderName">שם בעל הכרטיס:</label>
-              <input
-                type="text"
-                id="cardholderName"
-                value={cardholderName}
-                onChange={(e) => setCardholderName(e.target.value)}
-                required
-                disabled={processing}
-                placeholder="הזן את שמך המלא"
-              />
-            </div>
+          <div className="checkout-form">
+            {!order ? (
+              <>
+                <div className="payment-info">
+                  <p className="paypal-notice">
+                    💳 התשלום מתבצע דרך PayPal בצורה מאובטחת
+                  </p>
+                </div>
 
-            <div className="payment-info">
-              <p className="mock-payment-notice">
-                💳 זהו תשלום סימולציה לצורך בדיקה. לא יתבצע חיוב אמיתי.
-              </p>
-            </div>
+                {error && (
+                  <div className="checkout-error-message" style={{ whiteSpace: 'pre-line' }}>
+                    {error}
+                  </div>
+                )}
 
-            {error && <div className="checkout-error-message">{error}</div>}
+                <div className="checkout-actions">
+                  <button
+                    type="button"
+                    onClick={() => navigate("/cart")}
+                    className="back-to-cart-btn"
+                    disabled={processing}
+                  >
+                    חזרה לסל
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCreateOrder}
+                    className="pay-btn"
+                    disabled={processing}
+                  >
+                    {processing
+                      ? "יוצר הזמנה..."
+                      : `המשך לתשלום ${calculateTotal().toFixed(2)} ₪`}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="payment-info">
+                  <p className="paypal-notice">
+                    אנא השלם באמצעות PayPal. התשלום מאובטח ומאומת.
+                  </p>
+                </div>
 
-            <div className="checkout-actions">
-              <button
-                type="button"
-                onClick={() => navigate("/cart")}
-                className="back-to-cart-btn"
-                disabled={processing}
-              >
-                חזרה לסל
-              </button>
-              <button
-                type="submit"
-                className="pay-btn"
-                disabled={processing || !cardholderName.trim()}
-              >
-                {processing ? "מעבד תשלום..." : `שלם ${calculateTotal().toFixed(2)} ₪`}
-              </button>
-            </div>
-          </form>
+                {error && <div className="checkout-error-message">{error}</div>}
+
+                <div ref={paypalButtonRef} className="paypal-button-container"></div>
+
+                <div className="checkout-actions">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOrder(null);
+                      setPaypalOrderId(null);
+                      setError(null);
+                    }}
+                    className="back-to-cart-btn"
+                    disabled={processing}
+                  >
+                    חזרה
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

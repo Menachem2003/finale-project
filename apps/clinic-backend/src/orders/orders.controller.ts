@@ -40,8 +40,53 @@ export class OrdersController {
     return this.ordersService.createOrder(req.user.id, createOrderDto);
   }
 
+  @Post(":id/payment/create")
+  @ApiOperation({ summary: "Create PayPal order for payment" })
+  @ApiResponse({
+    status: 200,
+    description: "PayPal order created successfully",
+  })
+  @ApiResponse({
+    status: 400,
+    description: "Order already paid or PayPal order creation failed",
+  })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 404, description: "Order not found" })
+  async createPayPalOrder(
+    @Request() req: any,
+    @Param("id") orderId: string,
+  ) {
+    // Verify order belongs to user
+    await this.ordersService.getOrderById(orderId, req.user.id);
+    return this.ordersService.createPayPalOrder(orderId);
+  }
+
+  @Post(":id/payment/capture")
+  @ApiOperation({ summary: "Capture PayPal payment for order" })
+  @ApiResponse({
+    status: 200,
+    description: "Payment captured successfully",
+  })
+  @ApiResponse({
+    status: 400,
+    description: "Payment failed or order already paid",
+  })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 404, description: "Order not found" })
+  async capturePayPalPayment(
+    @Request() req: any,
+    @Param("id") orderId: string,
+    @Body() body: { paypalOrderId: string },
+  ) {
+    // Verify order belongs to user
+    await this.ordersService.getOrderById(orderId, req.user.id);
+    return this.ordersService.capturePayPalPayment(orderId, body.paypalOrderId);
+  }
+
   @Post(":id/payment")
-  @ApiOperation({ summary: "Process payment for order" })
+  @ApiOperation({
+    summary: "Process payment for order (legacy - redirects to PayPal)",
+  })
   @ApiResponse({ status: 200, description: "Payment processed successfully" })
   @ApiResponse({
     status: 400,
@@ -52,7 +97,7 @@ export class OrdersController {
   async processPayment(
     @Request() req: any,
     @Param("id") orderId: string,
-    @Body() processPaymentDto: ProcessPaymentDto
+    @Body() processPaymentDto: ProcessPaymentDto,
   ) {
     // Verify order belongs to user
     await this.ordersService.getOrderById(orderId, req.user.id);

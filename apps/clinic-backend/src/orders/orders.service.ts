@@ -10,6 +10,7 @@ import { Order, OrderDocument } from "./schemas/order.schema";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { ProcessPaymentDto } from "./dto/process-payment.dto";
 import { Product, ProductDocument } from "../products/schemas/product.schema";
+import { PayPalService } from "../payment/paypal.service";
 
 @Injectable()
 export class OrdersService {
@@ -17,7 +18,8 @@ export class OrdersService {
 
   constructor(
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
-    @InjectModel(Product.name) private productModel: Model<ProductDocument>
+    @InjectModel(Product.name) private productModel: Model<ProductDocument>,
+    private readonly paypalService: PayPalService,
   ) {}
 
   async createOrder(userId: string, createOrderDto: CreateOrderDto) {
@@ -63,7 +65,7 @@ export class OrdersService {
         total: createOrderDto.total,
         status: "pending",
         paymentStatus: "pending",
-        paymentMethod: "mock",
+        paymentMethod: "paypal",
       });
 
       await order.save();
@@ -97,9 +99,9 @@ export class OrdersService {
     }
   }
 
-  async processPayment(orderId: string, processPaymentDto: ProcessPaymentDto) {
+  async createPayPalOrder(orderId: string) {
     try {
-      this.logger.log(`Processing payment for order ${orderId}`);
+      this.logger.log(`Creating PayPal order for order ${orderId}`);
 
       const order = await this.orderModel.findById(orderId);
       if (!order) {
@@ -110,40 +112,88 @@ export class OrdersService {
         throw new BadRequestException("Order already paid");
       }
 
-      // Mock payment processing - simulate 2 second delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      if (order.paypalOrderId) {
+        // PayPal order already created, return existing ID
+        return { paypalOrderId: order.paypalOrderId };
+      }
 
-      // Mock payment: 95% success rate
-      const paymentSuccess = Math.random() > 0.05;
-      const transactionId = `TXN-${Date.now()}-${Math.random()
-        .toString(36)
-        .substr(2, 9)
-        .toUpperCase()}`;
+      // Create PayPal order
+      const paypalOrderId = await this.paypalService.createOrder(
+        order.total,
+        "ILS",
+        order._id.toString(),
+      );
 
-      if (paymentSuccess) {
+      // Save PayPal Order ID to our order
+      order.paypalOrderId = paypalOrderId;
+      await order.save();
+
+      this.logger.log(
+        `PayPal order created for order ${orderId}: ${paypalOrderId}`,
+      );
+
+      return { paypalOrderId };
+    } catch (error) {
+      this.logger.error(
+        `Error creating PayPal order for order ${orderId}:`,
+        error,
+      );
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
+      }
+      throw new BadRequestException("Failed to create PayPal order");
+    }
+  }
+
+  async capturePayPalPayment(orderId: string, paypalOrderId: string) {
+    try {
+      this.logger.log(
+        `Capturing PayPal payment for order ${orderId}, PayPal order: ${paypalOrderId}`,
+      );
+
+      const order = await this.orderModel.findById(orderId);
+      if (!order) {
+        throw new NotFoundException("Order not found");
+      }
+
+      if (order.paymentStatus === "paid") {
+        throw new BadRequestException("Order already paid");
+      }
+
+      if (order.paypalOrderId !== paypalOrderId) {
+        throw new BadRequestException("PayPal Order ID mismatch");
+      }
+
+      // Capture PayPal order
+      const captureResult = await this.paypalService.captureOrder(paypalOrderId);
+
+      if (captureResult.success && captureResult.transactionId) {
         order.paymentStatus = "paid";
         order.status = "completed";
-        order.transactionId = transactionId;
-        order.paymentMethod = processPaymentDto.paymentMethod || "mock";
+        order.transactionId = captureResult.transactionId;
+        order.paymentMethod = "paypal";
 
         await order.save();
         await order.populate("items.productId");
 
         this.logger.log(
-          `Payment successful for order ${orderId}, transaction: ${transactionId}`
+          `PayPal payment captured successfully for order ${orderId}, transaction: ${captureResult.transactionId}`,
         );
 
         return {
           success: true,
           order,
-          transactionId,
+          transactionId: captureResult.transactionId,
           message: "Payment processed successfully",
         };
       } else {
         order.paymentStatus = "failed";
         await order.save();
 
-        this.logger.warn(`Payment failed for order ${orderId}`);
+        this.logger.warn(`PayPal payment capture failed for order ${orderId}`);
 
         return {
           success: false,
@@ -153,8 +203,41 @@ export class OrdersService {
       }
     } catch (error) {
       this.logger.error(
+        `Error capturing PayPal payment for order ${orderId}:`,
+        error,
+      );
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
+      }
+      throw new BadRequestException("Failed to capture PayPal payment");
+    }
+  }
+
+  async processPayment(orderId: string, _processPaymentDto: ProcessPaymentDto) {
+    // This method is kept for backward compatibility but now redirects to PayPal
+    // In the future, this can be removed or used for other payment methods
+    try {
+      this.logger.log(`Processing payment for order ${orderId}`);
+
+      const order = await this.orderModel.findById(orderId);
+      if (!order) {
+        throw new NotFoundException("Order not found");
+      }
+
+      if (!order.paypalOrderId) {
+        throw new BadRequestException(
+          "PayPal order not created. Please create PayPal order first.",
+        );
+      }
+
+      return await this.capturePayPalPayment(orderId, order.paypalOrderId);
+    } catch (error) {
+      this.logger.error(
         `Error processing payment for order ${orderId}:`,
-        error
+        error,
       );
       if (
         error instanceof NotFoundException ||

@@ -122,6 +122,7 @@ export interface Order {
   paymentStatus: "pending" | "paid" | "failed";
   paymentMethod: string;
   transactionId?: string;
+  paypalOrderId?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

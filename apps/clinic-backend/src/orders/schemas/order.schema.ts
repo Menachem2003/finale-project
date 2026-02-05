@@ -50,11 +50,14 @@ export class Order {
   })
   paymentStatus!: string;
 
-  @Prop({ type: String, default: "mock" })
+  @Prop({ type: String, default: "paypal" })
   paymentMethod!: string;
 
   @Prop({ type: String })
   transactionId?: string;
+
+  @Prop({ type: String })
+  paypalOrderId?: string;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
