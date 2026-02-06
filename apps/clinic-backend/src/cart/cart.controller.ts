@@ -19,6 +19,7 @@ import { CartService } from './cart.service';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AuthenticatedRequest } from '../common/types/request.types';
 
 @ApiTags('cart')
 @Controller('cart')
@@ -32,7 +33,7 @@ export class CartController {
   @ApiResponse({ status: 200, description: 'Cart retrieved successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Cart not found' })
-  async getCart(@Request() req: any) {
+  async getCart(@Request() req: AuthenticatedRequest) {
     return this.cartService.getCart(req.user.id);
   }
 
@@ -42,7 +43,7 @@ export class CartController {
   @ApiResponse({ status: 400, description: 'Product already in cart or validation error' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Product not found' })
-  async addToCart(@Request() req: any, @Body() addToCartDto: AddToCartDto) {
+  async addToCart(@Request() req: AuthenticatedRequest, @Body() addToCartDto: AddToCartDto) {
     try {
       return await this.cartService.addToCart(req.user.id, addToCartDto);
     } catch (error) {
@@ -56,7 +57,7 @@ export class CartController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Cart item not found' })
   async updateCartItem(
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
     @Param('id') productId: string,
     @Body() updateDto: UpdateCartItemDto,
   ) {
@@ -68,7 +69,7 @@ export class CartController {
   @ApiResponse({ status: 200, description: 'Item removed from cart' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Cart item not found' })
-  async removeFromCart(@Request() req: any, @Param('id') productId: string) {
+  async removeFromCart(@Request() req: AuthenticatedRequest, @Param('id') productId: string) {
     return this.cartService.removeFromCart(req.user.id, productId);
   }
 
@@ -76,7 +77,7 @@ export class CartController {
   @ApiOperation({ summary: 'Clear entire cart' })
   @ApiResponse({ status: 200, description: 'Cart cleared successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async clearCart(@Request() req: any) {
+  async clearCart(@Request() req: AuthenticatedRequest) {
     return this.cartService.clearCart(req.user.id);
   }
 }

@@ -31,8 +31,9 @@ export class ServicesService {
     try {
       const service = new this.serviceModel(createServiceDto);
       return await service.save();
-    } catch (err: any) {
-      throw new BadRequestException(err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create service';
+      throw new BadRequestException(errorMessage);
     }
   }
 

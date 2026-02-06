@@ -23,8 +23,9 @@ export class CategoriesService {
     try {
       const category = new this.categoryModel(createCategoryDto);
       return await category.save();
-    } catch (err: any) {
-      throw new BadRequestException(err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create category';
+      throw new BadRequestException(errorMessage);
     }
   }
 

@@ -19,6 +19,7 @@ import { ProcessPaymentDto } from "./dto/process-payment.dto";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/guards/roles.guard";
 import { Roles } from "../auth/guards/roles.guard";
+import { AuthenticatedRequest } from "../common/types/request.types";
 
 @ApiTags("orders")
 @Controller("orders")
@@ -34,7 +35,7 @@ export class OrdersController {
   @ApiResponse({ status: 401, description: "Unauthorized" })
   @ApiResponse({ status: 404, description: "Product not found" })
   async createOrder(
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
     @Body() createOrderDto: CreateOrderDto
   ) {
     return this.ordersService.createOrder(req.user.id, createOrderDto);
@@ -53,7 +54,7 @@ export class OrdersController {
   @ApiResponse({ status: 401, description: "Unauthorized" })
   @ApiResponse({ status: 404, description: "Order not found" })
   async createPayPalOrder(
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
     @Param("id") orderId: string,
   ) {
     // Verify order belongs to user
@@ -74,7 +75,7 @@ export class OrdersController {
   @ApiResponse({ status: 401, description: "Unauthorized" })
   @ApiResponse({ status: 404, description: "Order not found" })
   async capturePayPalPayment(
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
     @Param("id") orderId: string,
     @Body() body: { paypalOrderId: string },
   ) {
@@ -95,7 +96,7 @@ export class OrdersController {
   @ApiResponse({ status: 401, description: "Unauthorized" })
   @ApiResponse({ status: 404, description: "Order not found" })
   async processPayment(
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
     @Param("id") orderId: string,
     @Body() processPaymentDto: ProcessPaymentDto,
   ) {
@@ -121,7 +122,7 @@ export class OrdersController {
   @ApiOperation({ summary: "Get user orders" })
   @ApiResponse({ status: 200, description: "Orders retrieved successfully" })
   @ApiResponse({ status: 401, description: "Unauthorized" })
-  async getUserOrders(@Request() req: any) {
+  async getUserOrders(@Request() req: AuthenticatedRequest) {
     return this.ordersService.getUserOrders(req.user.id);
   }
 
@@ -130,7 +131,7 @@ export class OrdersController {
   @ApiResponse({ status: 200, description: "Order retrieved successfully" })
   @ApiResponse({ status: 401, description: "Unauthorized" })
   @ApiResponse({ status: 404, description: "Order not found" })
-  async getOrderById(@Request() req: any, @Param("id") orderId: string) {
+  async getOrderById(@Request() req: AuthenticatedRequest, @Param("id") orderId: string) {
     return this.ordersService.getOrderById(orderId, req.user.id);
   }
 }

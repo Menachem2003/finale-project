@@ -19,7 +19,11 @@ export class ProductsService {
   async findAll(queryDto: QueryProductsDto) {
     const { name = '', category = '', min = 0, max = Infinity } = queryDto;
 
-    const query: any = {
+    const query: {
+      name?: RegExp;
+      category?: RegExp;
+      price?: { $gte: number; $lte: number };
+    } = {
       name: new RegExp(name as string, 'i'),
       category: new RegExp(category as string, 'i'),
       price: { $gte: Number(min), $lte: Number(max) },
@@ -44,8 +48,9 @@ export class ProductsService {
     try {
       const product = new this.productModel(createProductDto);
       return await product.save();
-    } catch (err: any) {
-      throw new BadRequestException(err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create product';
+      throw new BadRequestException(errorMessage);
     }
   }
 

@@ -44,7 +44,7 @@ export class TeamService {
       });
 
       return await member.save();
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err instanceof BadRequestException) {
         throw err;
       }
@@ -73,7 +73,7 @@ export class TeamService {
       }
 
       return await member.save();
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (
         err instanceof NotFoundException ||
         err instanceof BadRequestException

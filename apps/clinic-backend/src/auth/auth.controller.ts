@@ -19,6 +19,7 @@ import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 import { AuthResponseDto, UserResponseDto } from './dto/auth-response.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { AuthenticatedRequest } from '../common/types/request.types';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -62,7 +63,7 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized or token expired' })
   @ApiResponse({ status: 404, description: 'Cart not found' })
-  async validate(@Request() req: any) {
+  async validate(@Request() req: AuthenticatedRequest) {
     return this.authService.validate(req.user.id);
   }
 }

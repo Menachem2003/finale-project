@@ -47,7 +47,7 @@ export class DoctorsService {
       });
 
       return await doctor.save();
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err instanceof BadRequestException) {
         throw err;
       }
@@ -94,7 +94,7 @@ export class DoctorsService {
       return await this.doctorModel
         .findById(updatedDoctor._id)
         .populate("specialties");
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (
         err instanceof NotFoundException ||
         err instanceof BadRequestException
