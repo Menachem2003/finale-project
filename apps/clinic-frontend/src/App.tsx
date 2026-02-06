@@ -15,6 +15,7 @@ import ProductPage from "./pages/ProductsPage/component/ProductPage";
 import Cart from "./pages/CartPage/Cart";
 import Checkout from "./pages/CheckoutPage/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmationPage/OrderConfirmation";
+import type { CartItem } from "@clinic/shared";
 
 interface User {
   _id: string;
@@ -25,7 +26,7 @@ interface User {
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [cartItems, setCartItems] = useState<unknown[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   
   useEffect(() => {
     const validateToken = async () => {

@@ -1,9 +1,5 @@
 import { createContext, useContext } from "react";
-
-interface CartItem {
-  productId: string;
-  quantity: number;
-}
+import type { CartItem } from "@clinic/shared";
 
 interface CartContextType {
   cartItems: CartItem[];

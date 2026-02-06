@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
 import "./Checkout.css";
-import type { Product } from "@clinic/shared";
+import type { Product, Order, PayPalSDK } from "@clinic/shared";
 
 declare global {
   interface Window {
-    paypal?: any;
+    paypal?: PayPalSDK;
   }
 }
 
@@ -33,7 +33,7 @@ function Checkout() {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [order, setOrder] = useState<any>(null);
+  const [order, setOrder] = useState<Order | null>(null);
   const [paypalOrderId, setPaypalOrderId] = useState<string | null>(null);
   const [paypalSDKLoaded, setPaypalSDKLoaded] = useState(false);
   const paypalButtonRef = useRef<HTMLDivElement>(null);
@@ -165,7 +165,7 @@ function Checkout() {
             createOrder: () => {
               return paypalOrderId;
             },
-            onApprove: async (data: any, actions: any) => {
+            onApprove: async (data, actions) => {
               try {
                 setProcessing(true);
                 const token = localStorage.getItem("token");
@@ -204,7 +204,7 @@ function Checkout() {
                 setProcessing(false);
               }
             },
-            onError: (err: any) => {
+            onError: (err) => {
               console.error("PayPal error:", err);
               setError("שגיאה בתהליך התשלום של PayPal. אנא נסה שוב.");
               setProcessing(false);

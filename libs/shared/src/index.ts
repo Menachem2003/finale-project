@@ -126,3 +126,38 @@ export interface Order {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// PayPal SDK Types
+export interface PayPalSDK {
+  Buttons: (options: PayPalButtonOptions) => {
+    render: (container: HTMLElement | null) => void;
+  };
+}
+
+export interface PayPalButtonOptions {
+  createOrder: () => string | Promise<string>;
+  onApprove: (data: PayPalApproveData, actions: PayPalActions) => void | Promise<void>;
+  onError: (err: PayPalError) => void;
+  onCancel?: () => void;
+}
+
+export interface PayPalApproveData {
+  orderID: string;
+  payerID?: string;
+}
+
+export interface PayPalActions {
+  order?: {
+    capture: () => Promise<PayPalCaptureResponse>;
+  };
+}
+
+export interface PayPalCaptureResponse {
+  id: string;
+  status: string;
+}
+
+export interface PayPalError {
+  message?: string;
+  [key: string]: unknown;
+}
