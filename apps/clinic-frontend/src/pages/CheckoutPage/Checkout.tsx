@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
 import "./Checkout.css";
-import type { Product, Order, PayPalSDK } from "@clinic/shared";
+import type { Order, PayPalSDK, PayPalApproveData, PayPalActions, PayPalError } from "@clinic/shared";
 
 declare global {
   interface Window {
@@ -45,15 +45,24 @@ function Checkout() {
         return true;
       }
 
-      const clientId = import.meta.env.VITE_PAYPAL_CLIENT_ID;
-      if (!clientId || clientId === "YOUR_CLIENT_ID" || clientId === "your_paypal_client_id" || clientId.trim() === "") {
-        console.warn("PayPal Client ID not configured - PayPal payment will not be available");
+      const clientId: string | undefined = import.meta.env.VITE_PAYPAL_CLIENT_ID;
+      if (
+        !clientId ||
+        clientId === "YOUR_CLIENT_ID" ||
+        clientId === "your_paypal_client_id" ||
+        clientId.trim() === ""
+      ) {
+        console.warn(
+          "PayPal Client ID not configured - PayPal payment will not be available",
+        );
         return false;
       }
 
       return new Promise<boolean>((resolve) => {
         // Check if script already exists
-        const existingScript = document.querySelector(`script[src*="paypal.com/sdk"]`);
+        const existingScript = document.querySelector(
+          `script[src*="paypal.com/sdk"]`,
+        );
         if (existingScript) {
           if (window.paypal) {
             setPaypalSDKLoaded(true);
@@ -98,36 +107,35 @@ function Checkout() {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Load PayPal SDK first
         await loadPayPalSDK();
-        
+
         const response = await api.get("/cart", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const cartData = response.data;
-        
+
         if (!cartData.items || cartData.items.length === 0) {
           navigate("/cart");
           return;
         }
-        
+
         setCart(cartData);
       } catch (err: unknown) {
         console.error("Failed to fetch cart", err);
-        if (
-          err &&
-          typeof err === "object" &&
-          "response" in err
-        ) {
-          const response = err as { response?: { status?: number; data?: { message?: string } } };
-          
+        if (err && typeof err === "object" && "response" in err) {
+          const response = err as {
+            response?: { status?: number; data?: { message?: string } };
+          };
+
           if (response.response?.status === 401) {
             navigate("/login");
             return;
           }
-          
-          const errorMessage = response.response?.data?.message || "שגיאה בטעינת הסל";
+
+          const errorMessage =
+            response.response?.data?.message || "שגיאה בטעינת הסל";
           setError(errorMessage);
         } else {
           setError("שגיאה בטעינת הסל. אנא נסה שוב מאוחר יותר.");
@@ -144,7 +152,7 @@ function Checkout() {
     if (!cart || !cart.items) return 0;
     return cart.items.reduce(
       (total, item) => total + item.productId.price * item.quantity,
-      0
+      0,
     );
   };
 
@@ -163,9 +171,12 @@ function Checkout() {
         window.paypal
           .Buttons({
             createOrder: () => {
+              if (!paypalOrderId) {
+                throw new Error("PayPal order ID is missing");
+              }
               return paypalOrderId;
             },
-            onApprove: async (data, actions) => {
+            onApprove: async (_data: PayPalApproveData, _actions: PayPalActions) => {
               try {
                 setProcessing(true);
                 const token = localStorage.getItem("token");
@@ -180,7 +191,7 @@ function Checkout() {
                   { paypalOrderId },
                   {
                     headers: { Authorization: `Bearer ${token}` },
-                  }
+                  },
                 );
 
                 if (captureResponse.data.success) {
@@ -194,7 +205,7 @@ function Checkout() {
                 } else {
                   setError(
                     captureResponse.data.message ||
-                      "תהליך התשלום נכשל. אנא נסה שוב."
+                      "תהליך התשלום נכשל. אנא נסה שוב.",
                   );
                   setProcessing(false);
                 }
@@ -204,7 +215,7 @@ function Checkout() {
                 setProcessing(false);
               }
             },
-            onError: (err) => {
+            onError: (err: PayPalError) => {
               console.error("PayPal error:", err);
               setError("שגיאה בתהליך התשלום של PayPal. אנא נסה שוב.");
               setProcessing(false);
@@ -236,24 +247,31 @@ function Checkout() {
     }
 
     // Check if PayPal SDK is loaded
-    const clientId = import.meta.env.VITE_PAYPAL_CLIENT_ID;
-    if (!clientId || clientId === "YOUR_CLIENT_ID" || clientId === "your_paypal_client_id" || clientId.trim() === "") {
+    const clientId: string | undefined = import.meta.env.VITE_PAYPAL_CLIENT_ID;
+    if (
+      !clientId ||
+      clientId === "YOUR_CLIENT_ID" ||
+      clientId === "your_paypal_client_id" ||
+      clientId.trim() === ""
+    ) {
       setError(
         "PayPal לא מוגדר.\n\n" +
-        "אנא פתח את קובץ .env בתיקיית השורש של הפרויקט והחלף את 'your_paypal_client_id' בערך האמיתי של PayPal Client ID שלך.\n\n" +
-        "לקבלת PayPal Sandbox credentials:\n" +
-        "1. היכנס ל-https://developer.paypal.com/\n" +
-        "2. צור Sandbox Account\n" +
-        "3. קבל Client ID מה-App שלך\n" +
-        "4. החלף את הערך בקובץ .env\n" +
-        "5. הפעל מחדש את שרת ה-frontend"
+          "אנא פתח את קובץ .env בתיקיית השורש של הפרויקט והחלף את 'your_paypal_client_id' בערך האמיתי של PayPal Client ID שלך.\n\n" +
+          "לקבלת PayPal Sandbox credentials:\n" +
+          "1. היכנס ל-https://developer.paypal.com/\n" +
+          "2. צור Sandbox Account\n" +
+          "3. קבל Client ID מה-App שלך\n" +
+          "4. החלף את הערך בקובץ .env\n" +
+          "5. הפעל מחדש את שרת ה-frontend",
       );
       setProcessing(false);
       return;
     }
 
     if (!paypalSDKLoaded || !window.paypal) {
-      setError("PayPal SDK לא נטען. אנא רענן את הדף או בדוק את החיבור לאינטרנט.");
+      setError(
+        "PayPal SDK לא נטען. אנא רענן את הדף או בדוק את החיבור לאינטרנט.",
+      );
       setProcessing(false);
       return;
     }
@@ -277,7 +295,7 @@ function Checkout() {
         },
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       const createdOrder = createOrderResponse.data;
@@ -289,7 +307,7 @@ function Checkout() {
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       setPaypalOrderId(paypalOrderResponse.data.paypalOrderId);
@@ -297,11 +315,7 @@ function Checkout() {
     } catch (err: unknown) {
       console.error("Order creation error:", err);
 
-      if (
-        err &&
-        typeof err === "object" &&
-        "response" in err
-      ) {
+      if (err && typeof err === "object" && "response" in err) {
         const response = err as {
           response?: { status?: number; data?: { message?: string } };
         };
@@ -334,7 +348,10 @@ function Checkout() {
     return (
       <div className="checkout-empty">
         <h2>הסל שלך ריק</h2>
-        <button onClick={() => navigate("/products")} className="continue-shopping-btn">
+        <button
+          onClick={() => navigate("/products")}
+          className="continue-shopping-btn"
+        >
           המשך לקניות
         </button>
       </div>
@@ -344,7 +361,7 @@ function Checkout() {
   return (
     <div className="checkout-container">
       <h1 className="checkout-title">תשלום</h1>
-      
+
       <div className="checkout-content">
         <div className="checkout-summary">
           <h2>סיכום הזמנה</h2>
@@ -393,7 +410,10 @@ function Checkout() {
                 </div>
 
                 {error && (
-                  <div className="checkout-error-message" style={{ whiteSpace: 'pre-line' }}>
+                  <div
+                    className="checkout-error-message"
+                    style={{ whiteSpace: "pre-line" }}
+                  >
                     {error}
                   </div>
                 )}
@@ -429,7 +449,10 @@ function Checkout() {
 
                 {error && <div className="checkout-error-message">{error}</div>}
 
-                <div ref={paypalButtonRef} className="paypal-button-container"></div>
+                <div
+                  ref={paypalButtonRef}
+                  className="paypal-button-container"
+                ></div>
 
                 <div className="checkout-actions">
                   <button

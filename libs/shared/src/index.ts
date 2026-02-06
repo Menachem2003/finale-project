@@ -136,7 +136,10 @@ export interface PayPalSDK {
 
 export interface PayPalButtonOptions {
   createOrder: () => string | Promise<string>;
-  onApprove: (data: PayPalApproveData, actions: PayPalActions) => void | Promise<void>;
+  onApprove: (
+    data: PayPalApproveData,
+    actions: PayPalActions,
+  ) => void | Promise<void>;
   onError: (err: PayPalError) => void;
   onCancel?: () => void;
 }
