@@ -43,16 +43,20 @@ export class ReferralsService {
       }
 
       return savedReferral;
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.logger.error('Create referral error:', err);
-      if (err.name === 'ValidationError') {
-        const validationErrors = Object.values(err.errors || {}).map((e: any) => e.message).join(', ');
+      if (err && typeof err === 'object' && 'name' in err && err.name === 'ValidationError') {
+        const validationError = err as { errors?: Record<string, { message: string }> };
+        const validationErrors = Object.values(validationError.errors || {}).map((e) => e.message).join(', ');
         throw new BadRequestException(`Validation error: ${validationErrors}`);
       }
       if (err instanceof BadRequestException) {
         throw err;
       }
-      throw new BadRequestException(err.message || 'Failed to create referral. Please try again.');
+      const errorMessage = err && typeof err === 'object' && 'message' in err 
+        ? (err as { message?: string }).message 
+        : undefined;
+      throw new BadRequestException(errorMessage || 'Failed to create referral. Please try again.');
     }
   }
 

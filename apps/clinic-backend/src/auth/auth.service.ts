@@ -103,12 +103,13 @@ export class AuthService {
       userResponse.password = '********';
 
       return userResponse;
-    } catch (err: any) {
-      if (err.code === 11000) {
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'code' in err && err.code === 11000) {
         throw new ConflictException('User already exists');
       }
-      if (err.name === 'ValidationError') {
-        throw new ConflictException(err.message);
+      if (err && typeof err === 'object' && 'name' in err && err.name === 'ValidationError') {
+        const validationError = err as { message?: string };
+        throw new ConflictException(validationError.message || 'Validation error');
       }
       console.error('Signup error:', err);
       throw new ConflictException('Failed to create user. Please try again.');
