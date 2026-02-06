@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תיעוד קוד - Frontend ו-Backend</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Assistant', 'Arial', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #fff;
+            padding: 40px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        h2 {
+            font-size: 2em;
+            color: #34495e;
+            margin-top: 50px;
+            margin-bottom: 25px;
+            padding-right: 15px;
+            border-right: 5px solid #3498db;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            font-size: 1.5em;
+            color: #2980b9;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        h4 {
+            font-size: 1.2em;
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+            font-size: 1.05em;
+        }
+        
+        ul, ol {
+            margin-right: 30px;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+        
+        strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #e74c3c;
+        }
+        
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.9em;
+        }
+        
+        pre code {
+            background: transparent;
+            color: #ecf0f1;
+            padding: 0;
+        }
+        
+        .file-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            border-right: 4px solid #3498db;
+        }
+        
+        .file-path {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 20px;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .frontend {
+            border-right-color: #27ae60;
+        }
+        
+        .backend {
+            border-right-color: #e74c3c;
+        }
+        
+        .screenshot-placeholder {
+            background: #ecf0f1;
+            border: 3px dashed #95a5a6;
+            padding: 40px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 20px 0;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            color: #7f8c8d;
+        }
+        
+        .code-highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-right: 4px solid #ffc107;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .note {
+            background: #e3f2fd;
+            padding: 15px;
+            border-right: 4px solid #2196f3;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background: #fff3e0;
+            padding: 15px;
+            border-right: 4px solid #ff9800;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        @media print {
+            body {
+                padding: 20px;
+            }
+            
+            h1, h2 {
+                page-break-after: avoid;
+            }
+            
+            .file-section {
+                page-break-inside: avoid;
+            }
+            
+            .screenshot-placeholder {
+                page-break-inside: avoid;
+            }
+        }
+        
+        @page {
+            margin: 2cm;
+        }
+    </style>
+</head>
+<body>
+    <h1>תיעוד קוד - Frontend ו-Backend</h1>
+    
+    <div class="note">
+        <strong>הערה:</strong> מסמך זה מכיל הסברים מפורטים על קבצים מרכזיים בפרויקט. 
+        עבור כל קובץ, יש לקחת תצלום מסך של הקוד ב-IDE (Visual Studio Code או Cursor) 
+        ולהציב אותו במקום ה-placeholder המתאים.
+    </div>
+    
+    <h2>קבצי Frontend (React + TypeScript)</h2>
+    
+    <!-- Frontend File 1: App.tsx -->
+    <div class="file-section frontend">
+        <div class="file-path">apps/clinic-frontend/src/App.tsx</div>
+        
+        <h3>1. App.tsx - נקודת הכניסה הראשית של האפליקציה</h3>
+        
+        <div class="screenshot-placeholder">
+            📸 כאן יש להציב תצלום מסך של הקובץ App.tsx ב-IDE
+            <br>
+            <small>מומלץ לצלם את כל הקובץ (שורות 1-101)</small>
+        </div>
+        
+        <h4>תפקיד הקובץ:</h4>
+        <p>קובץ זה הוא נקודת הכניסה הראשית של האפליקציה. הוא מגדיר את כל הניתוב (Routing) של האפליקציה ומנהל את מצב האימות הגלובלי.</p>
+        
+        <h4>מה קורה בקובץ:</h4>
+        <ol>
+            <li><strong>ניהול מצב משתמש (User State)</strong>:
+                <ul>
+                    <li>שימוש ב-<code>useState</code> לשמירת מצב המשתמש הנוכחי</li>
+                    <li>בדיקת טוקן JWT ב-<code>localStorage</code> בעת טעינת האפליקציה</li>
+                    <li>אימות הטוקן מול השרת דרך endpoint <code>/auth/validate</code></li>
+                </ul>
+            </li>
+            <li><strong>Context Providers</strong>:
+                <ul>
+                    <li><code>AuthContext.Provider</code> - מספק את מצב המשתמש לכל הקומפוננטות</li>
+                    <li><code>CartContext.Provider</code> - מספק את מצב הסל לכל הקומפוננטות</li>
+                </ul>
+            </li>
+            <li><strong>ניתוב (Routing)</strong>:
+                <ul>
+                    <li>דפים ציבוריים: <code>/</code>, <code>/products</code>, <code>/contact</code>, <code>/team</code></li>
+                    <li>דפים מוגנים (דורשים התחברות): <code>/checkout</code>, <code>/orders/:id</code></li>
+                    <li>דפי מנהל (דורשים role="admin"): <code>/admin</code></li>
+                    <li>דפי אימות: <code>/login</code>, <code>/signup</code> (מוצגים רק למשתמשים לא מחוברים)</li>
+                </ul>
+            </li>
+            <li><strong>הגנה על Routes</strong>:
+                <ul>
+                    <li>Routes מוגנים מוצגים רק אם <code>user</code> קיים</li>
+                    <li>Routes של מנהל מוצגים רק אם <code>user.role === "admin"</code></li>
+                    <li>Routes של אימות מוצגים רק אם המשתמש לא מחובר</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי:</strong>
+            <pre><code>useEffect(() => {
+  const validateToken = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setUser(null);
+      return;
+    }
+    const { data } = await api.get("auth/validate", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setUser(data);
+  };
+  validateToken();
+}, []);</code></pre>
+        </div>
+        
+        <div class="note">
+            <strong>הסבר:</strong> קוד זה רץ בעת טעינת האפליקציה ובודק אם יש טוקן שמור. 
+            אם יש, הוא מאמת אותו מול השרת ומעדכן את מצב המשתמש. זה מאפשר למשתמש להישאר מחובר גם אחרי רענון הדף.
+        </div>
+    </div>
+    
+    <!-- Frontend File 2: Checkout.tsx -->
+    <div class="file-section frontend">
+        <div class="file-path">apps/clinic-frontend/src/pages/CheckoutPage/Checkout.tsx</div>
+        
+        <h3>2. Checkout.tsx - דף תשלום עם אינטגרציה של PayPal</h3>
+        
+        <div class="screenshot-placeholder">
+            📸 כאן יש להציב תצלום מסך של הקובץ Checkout.tsx ב-IDE
+            <br>
+            <small>מומלץ לצלם את החלקים המרכזיים: טעינת PayPal SDK (שורות 41-89), יצירת הזמנה (שורות 226-323), ו-rendering של כפתור PayPal (שורות 151-224)</small>
+        </div>
+        
+        <h4>תפקיד הקובץ:</h4>
+        <p>קובץ זה מנהל את תהליך התשלום המלא, כולל טעינת PayPal SDK, יצירת הזמנה, ואינטגרציה עם כפתורי התשלום של PayPal.</p>
+        
+        <h4>מה קורה בקובץ:</h4>
+        <ol>
+            <li><strong>טעינת PayPal SDK</strong> (שורות 41-89):
+                <ul>
+                    <li>פונקציה <code>loadPayPalSDK</code> טוענת את ה-SDK של PayPal דינמית</li>
+                    <li>בודקת אם ה-SDK כבר נטען כדי למנוע טעינה כפולה</li>
+                    <li>יוצרת script tag עם Client ID מ-<code>import.meta.env.VITE_PAYPAL_CLIENT_ID</code></li>
+                    <li>ממתינה לסיום הטעינה לפני המשך</li>
+                </ul>
+            </li>
+            <li><strong>טעינת הסל</strong> (שורות 91-141):
+                <ul>
+                    <li>מביאה את הסל מהשרת דרך <code>/cart</code></li>
+                    <li>בודקת שהמשתמש מחובר (אם לא, מפנה ל-<code>/login</code>)</li>
+                    <li>מחכה לטעינת PayPal SDK לפני המשך</li>
+                </ul>
+            </li>
+            <li><strong>יצירת הזמנה</strong> (שורות 226-323):
+                <ul>
+                    <li>יוצרת הזמנה בשרת דרך <code>POST /orders</code></li>
+                    <li>יוצרת PayPal Order דרך <code>POST /orders/:id/payment/create</code></li>
+                    <li>שומרת את <code>paypalOrderId</code> למטרת תשלום</li>
+                </ul>
+            </li>
+            <li><strong>כפתור PayPal</strong> (שורות 151-224):
+                <ul>
+                    <li>מאתחל את כפתור PayPal רק אחרי שהזמנה נוצרה ו-PayPal SDK נטען</li>
+                    <li>כאשר המשתמש לוחץ על הכפתור, מתבצע <code>onApprove</code></li>
+                    <li>ב-<code>onApprove</code> מתבצע capture של התשלום דרך <code>POST /orders/:id/payment/capture</code></li>
+                    <li>אחרי תשלום מוצלח, הסל מתנקה והמשתמש מועבר לדף אישור הזמנה</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - טעינת PayPal SDK:</strong>
+            <pre><code>const loadPayPalSDK = async (): Promise<boolean> => {
+  if (window.paypal) {
+    setPaypalSDKLoaded(true);
+    return true;
+  }
+  
+  const script = document.createElement("script");
+  script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=ILS`;
+  script.async = true;
+  script.onload = () => {
+    setPaypalSDKLoaded(true);
+    resolve(true);
+  };
+  document.head.appendChild(script);
+};</code></pre>
+        </div>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - Capture תשלום:</strong>
+            <pre><code>onApprove: async (data: any, actions: any) => {
+  const captureResponse = await api.post(
+    `/orders/${order._id}/payment/capture`,
+    { paypalOrderId },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  
+  if (captureResponse.data.success) {
+    await api.delete("/cart");
+    navigate(`/orders/${order._id}`);
+  }
+}</code></pre>
+        </div>
+        
+        <div class="warning">
+            <strong>חשוב:</strong> הקובץ כולל בדיקות מקיפות לוודא ש-PayPal SDK נטען לפני שימוש, 
+            וש-PayPal Client ID מוגדר נכון. אם לא, מוצגת הודעת שגיאה מפורטת למשתמש.
+        </div>
+    </div>
+    
+    <!-- Frontend File 3: Admin.tsx -->
+    <div class="file-section frontend">
+        <div class="file-path">apps/clinic-frontend/src/pages/AdminPage/Admin.tsx</div>
+        
+        <h3>3. Admin.tsx - לוח בקרת ניהול</h3>
+        
+        <div class="screenshot-placeholder">
+            📸 כאן יש להציב תצלום מסך של הקובץ Admin.tsx ב-IDE
+            <br>
+            <small>מומלץ לצלם את כל הקובץ (שורות 1-114) כולל את ה-array של sections</small>
+        </div>
+        
+        <h4>תפקיד הקובץ:</h4>
+        <p>קובץ זה מגדיר את לוח הבקרה הראשי של המנהל, כולל תפריט ניווט וניהול של כל הסעיפים השונים.</p>
+        
+        <h4>מה קורה בקובץ:</h4>
+        <ol>
+            <li><strong>מבנה הניווט</strong>:
+                <ul>
+                    <li>מגדיר array של sections: משתמשים, קטגוריות, מוצרים, פניות, רכישות, רופאים, צוות</li>
+                    <li>כל section מוצג ככפתור בתפריט הצד</li>
+                </ul>
+            </li>
+            <li><strong>ניהול מצב</strong>:
+                <ul>
+                    <li><code>currentSection</code> - שומר את הסעיף הנוכחי שנבחר</li>
+                    <li><code>categories</code> - שומר את כל הקטגוריות (נדרש לניהול מוצרים)</li>
+                    <li>טוען קטגוריות בעת טעינת הקומפוננטה</li>
+                </ul>
+            </li>
+            <li><strong>תצוגה דינמית</strong>:
+                <ul>
+                    <li>לפי <code>currentSection</code>, מציג את הקומפוננטה המתאימה</li>
+                    <li>כל קומפוננטה (AdminUsers, AdminCategories, וכו') מטפלת בלוגיקה שלה</li>
+                </ul>
+            </li>
+            <li><strong>Handlers</strong>:
+                <ul>
+                    <li><code>handleCategoryUpdated</code> - מעדכן קטגוריה בשרת ומעדכן את ה-state</li>
+                    <li><code>handleCategoryAdd</code> - מוסיף קטגוריה חדשה</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - תצוגה דינמית:</strong>
+            <pre><code>{currentSection === "users" && <AdminUsers />}
+{currentSection === "categories" && (
+  <AdminCategories
+    categories={categories}
+    catLoading={catLoading}
+    catError={catError}
+    onCategoryUpdated={handleCategoryUpdated}
+    onCategoryAdd={handleCategoryAdd}
+  />
+)}
+{currentSection === "orders" && <AdminOrders />}
+{currentSection === "doctors" && <AdminDoctors />}
+{currentSection === "team" && <AdminTeam />}</code></pre>
+        </div>
+        
+        <div class="note">
+            <strong>הסבר:</strong> הקובץ משתמש ב-Conditional Rendering כדי להציג רק את הקומפוננטה הרלוונטית. 
+            זה מאפשר ניהול נקי ומסודר של כל הפונקציות הניהוליות במקום אחד.
+        </div>
+    </div>
+    
+    <!-- Frontend File 4: HeroTeam.tsx -->
+    <div class="file-section frontend">
+        <div class="file-path">apps/clinic-frontend/src/pages/TeamPage/component/HeroTeam.tsx</div>
+        
+        <h3>4. HeroTeam.tsx - הצגת חברי הצוות</h3>
+        
+        <div class="screenshot-placeholder">
+            📸 כאן יש להציב תצלום מסך של הקובץ HeroTeam.tsx ב-IDE
+            <br>
+            <small>מומלץ לצלם את כל הקובץ (שורות 1-103) כולל את ה-useEffect לטעינת הנתונים</small>
+        </div>
+        
+        <h4>תפקיד הקובץ:</h4>
+        <p>קובץ זה מציג את רשימת חברי הצוות בדף הצוות. הוא טוען את הנתונים מהשרת ומציג אותם בצורה ויזואלית.</p>
+        
+        <h4>מה קורה בקובץ:</h4>
+        <ol>
+            <li><strong>טעינת נתונים</strong> (שורות 10-27):
+                <ul>
+                    <li>ב-<code>useEffect</code> טוען את רשימת הצוות דרך <code>GET /team</code></li>
+                    <li>מנהל מצבי loading ו-error</li>
+                    <li>מעדכן את ה-state עם הנתונים שהתקבלו</li>
+                </ul>
+            </li>
+            <li><strong>מצבי תצוגה</strong>:
+                <ul>
+                    <li><strong>Loading</strong>: מציג "טוען את הצוות..."</li>
+                    <li><strong>Error</strong>: מציג הודעת שגיאה</li>
+                    <li><strong>Empty</strong>: מציג "אין חברי צוות זמינים כרגע"</li>
+                    <li><strong>Success</strong>: מציג את רשימת חברי הצוות</li>
+                </ul>
+            </li>
+            <li><strong>תצוגת חברי צוות</strong> (שורות 60-98):
+                <ul>
+                    <li>מציג כרטיס לכל חבר צוות</li>
+                    <li>כולל תמונה (או placeholder עם האות הראשונה של השם)</li>
+                    <li>מציג שם ותיאור</li>
+                    <li>מטפל בשגיאות טעינת תמונה עם <code>onError</code></li>
+                </ul>
+            </li>
+        </ol>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - טעינת נתונים:</strong>
+            <pre><code>useEffect(() => {
+  const fetchTeam = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await api.get("/team");
+      const teamMembers = response.data || [];
+      setTeam(teamMembers);
+    } catch (err: unknown) {
+      console.error("Failed to fetch team:", err);
+      setError("שגיאה בטעינת הצוות. אנא נסה שוב מאוחר יותר.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchTeam();
+}, []);</code></pre>
+        </div>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - טיפול בשגיאת תמונה:</strong>
+            <pre><code>onError={(e) => {
+  const target = e.target as HTMLImageElement;
+  target.style.display = "none";
+  const container = target.parentElement;
+  if (container) {
+    const placeholder = document.createElement("div");
+    placeholder.className = "team-image-placeholder";
+    placeholder.textContent = member.name.charAt(0).toUpperCase();
+    container.appendChild(placeholder);
+  }
+}}</code></pre>
+        </div>
+        
+        <div class="note">
+            <strong>הסבר:</strong> הקובץ כולל טיפול מקיף בשגיאות - גם בטעינת הנתונים וגם בטעינת התמונות. 
+            אם תמונה לא נטענת, מוצג placeholder עם האות הראשונה של השם.
+        </div>
+    </div>
+    
+    <!-- Frontend File 5: LoginComponent.tsx -->
+    <div class="file-section frontend">
+        <div class="file-path">apps/clinic-frontend/src/User/LoginComponent.tsx</div>
+        
+        <h3>5. LoginComponent.tsx - דף התחברות</h3>
+        
+        <div class="screenshot-placeholder">
+            📸 כאן יש להציב תצלום מסך של הקובץ LoginComponent.tsx ב-IDE
+            <br>
+            <small>מומלץ לצלם את כל הקובץ (שורות 1-139) כולל את ה-handleSubmit</small>
+        </div>
+        
+        <h4>תפקיד הקובץ:</h4>
+        <p>קובץ זה מטפל בתהליך ההתחברות של המשתמש, כולל אימות פרטים מול השרת ושמירת הטוקן.</p>
+        
+        <h4>מה קורה בקובץ:</h4>
+        <ol>
+            <li><strong>ניהול טופס</strong>:
+                <ul>
+                    <li>שימוש ב-<code>useState</code> לשמירת ערכי הטופס (email, password)</li>
+                    <li><code>handleChange</code> מעדכן את ה-state בכל שינוי בשדות</li>
+                </ul>
+            </li>
+            <li><strong>שליחת טופס</strong> (שורות 23-86):
+                <ul>
+                    <li><code>handleSubmit</code> שולח את הפרטים ל-<code>POST /auth/login</code></li>
+                    <li>אם ההתחברות הצליחה:
+                        <ul>
+                            <li>שומר את הטוקן ב-<code>localStorage</code></li>
+                            <li>מעדכן את מצב המשתמש דרך <code>setUser</code></li>
+                            <li>מעביר את המשתמש לדף הבית</li>
+                        </ul>
+                    </li>
+                    <li>אם ההתחברות נכשלה:
+                        <ul>
+                            <li>מטפל בשגיאות שונות (401, 404, 500, וכו')</li>
+                            <li>מציג הודעת שגיאה מתאימה</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><strong>טיפול בשגיאות מפורט</strong>:
+                <ul>
+                    <li>בודק את סטטוס ה-HTTP response</li>
+                    <li>מציג הודעות שגיאה מותאמות לפי סוג השגיאה</li>
+                    <li>מטפל גם בשגיאות רשת (Network Error)</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - התחברות מוצלחת:</strong>
+            <pre><code>const { data } = await api.post("auth/login", {
+  email: formData.email,
+  password: formData.password,
+});
+
+if (setUser) {
+  setUser(data.user);
+}
+localStorage.setItem("token", data.token);
+nav("/");</code></pre>
+        </div>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - טיפול בשגיאות:</strong>
+            <pre><code>if (response.status === 401) {
+  errorMessage = "אימייל או סיסמה שגויים";
+} else if (response.status === 404) {
+  errorMessage = "השרת לא נמצא. אנא ודא שהשרת רץ.";
+} else if (response.status === 500) {
+  errorMessage = "שגיאת שרת. אנא נסה שוב מאוחר יותר.";
+}</code></pre>
+        </div>
+        
+        <div class="note">
+            <strong>הסבר:</strong> הקובץ כולל טיפול מקיף בשגיאות כדי לספק למשתמש חוויית משתמש טובה. 
+            הוא מבדיל בין סוגי שגיאות שונים ומציג הודעות ברורות ומדויקות.
+        </div>
+    </div>
+    
+    <h2>קבצי Backend (NestJS + TypeScript)</h2>
+    
+    <!-- Backend File 1: main.ts -->
+    <div class="file-section backend">
+        <div class="file-path">apps/clinic-backend/src/main.ts</div>
+        
+        <h3>1. main.ts - נקודת הכניסה של השרת</h3>
+        
+        <div class="screenshot-placeholder">
+            📸 כאן יש להציב תצלום מסך של הקובץ main.ts ב-IDE
+            <br>
+            <small>מומלץ לצלם את כל הקובץ (שורות 1-83) כולל את ה-bootstrap function</small>
+        </div>
+        
+        <h4>תפקיד הקובץ:</h4>
+        <p>קובץ זה הוא נקודת הכניסה הראשית של שרת ה-Backend. הוא מאתחל את האפליקציה NestJS, מגדיר middleware, ומתחיל את השרת.</p>
+        
+        <h4>מה קורה בקובץ:</h4>
+        <ol>
+            <li><strong>אתחול האפליקציה</strong> (שורות 8-13):
+                <ul>
+                    <li>יוצר instance של NestJS application דרך <code>NestFactory.create(AppModule)</code></li>
+                    <li>משתמש ב-Logger מותאם אישית</li>
+                </ul>
+            </li>
+            <li><strong>הגדרת CORS</strong> (שורות 16-21):
+                <ul>
+                    <li>מאפשר גישה מכל origin (בסביבת פיתוח)</li>
+                    <li>מאפשר credentials (cookies, authorization headers)</li>
+                    <li>מגדיר methods ו-headers מותרים</li>
+                </ul>
+            </li>
+            <li><strong>Validation Pipe גלובלי</strong> (שורות 24-33):
+                <ul>
+                    <li>מאמת כל incoming request</li>
+                    <li><code>whitelist: true</code> - מסיר שדות שלא מוגדרים ב-DTO</li>
+                    <li><code>forbidNonWhitelisted: true</code> - זורק שגיאה אם יש שדות לא מותרים</li>
+                    <li><code>transform: true</code> - ממיר types אוטומטית</li>
+                </ul>
+            </li>
+            <li><strong>Swagger Documentation</strong> (שורות 36-64):
+                <ul>
+                    <li>מגדיר את ה-API documentation</li>
+                    <li>מוסיף JWT Bearer Authentication</li>
+                    <li>מגדיר tags לקטגוריות שונות</li>
+                    <li>מזמין את ה-documentation ב-<code>/api</code></li>
+                </ul>
+            </li>
+            <li><strong>הפעלת השרת</strong> (שורות 66-70):
+                <ul>
+                    <li>קורא את ה-PORT מ-environment variables (או 3000 כברירת מחדל)</li>
+                    <li>מאזין על הפורט</li>
+                    <li>מדפיס הודעות הצלחה עם כתובות</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - אתחול:</strong>
+            <pre><code>const app = await NestFactory.create(AppModule);
+
+app.enableCors({
+  origin: true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});</code></pre>
+        </div>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - Validation Pipe:</strong>
+            <pre><code>app.useGlobalPipes(
+  new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+    transformOptions: {
+      enableImplicitConversion: true,
+    },
+  }),
+);</code></pre>
+        </div>
+        
+        <div class="note">
+            <strong>הסבר:</strong> הקובץ מגדיר את כל ההגדרות הגלובליות של השרת. 
+            ה-Validation Pipe מבטיח שכל הנתונים שמגיעים לשרת תקינים ומאומתים לפני עיבוד.
+        </div>
+    </div>
+    
+    <!-- Backend File 2: paypal.service.ts -->
+    <div class="file-section backend">
+        <div class="file-path">apps/clinic-backend/src/payment/paypal.service.ts</div>
+        
+        <h3>2. paypal.service.ts - שירות אינטגרציה עם PayPal</h3>
+        
+        <div class="screenshot-placeholder">
+            📸 כאן יש להציב תצלום מסך של הקובץ paypal.service.ts ב-IDE
+            <br>
+            <small>מומלץ לצלם את החלקים המרכזיים: initialize (שורות 16-79), createOrder (שורות 81-129), captureOrder (שורות 131-171)</small>
+        </div>
+        
+        <h4>תפקיד הקובץ:</h4>
+        <p>קובץ זה מטפל בכל האינטראקציות עם PayPal API, כולל יצירת הזמנות, capture תשלומים, וקבלת פרטי הזמנות.</p>
+        
+        <h4>מה קורה בקובץ:</h4>
+        <ol>
+            <li><strong>אתחול השירות</strong> (שורות 16-79):
+                <ul>
+                    <li>קורא credentials מ-environment variables</li>
+                    <li>בודק שהמבנה של PayPal SDK תקין</li>
+                    <li>יוצר PayPal Client עם credentials</li>
+                    <li>יוצר OrdersController לטיפול בהזמנות</li>
+                    <li>מתעד את כל התהליך ב-logs</li>
+                </ul>
+            </li>
+            <li><strong>יצירת PayPal Order</strong> (שורות 81-129):
+                <ul>
+                    <li>מקבל סכום, מטבע, ו-order ID</li>
+                    <li>יוצר order body עם purchase units</li>
+                    <li>מגדיר returnUrl ו-cancelUrl</li>
+                    <li>קורא ל-<code>ordersClient.createOrder</code></li>
+                    <li>מחזיר את PayPal Order ID</li>
+                </ul>
+            </li>
+            <li><strong>Capture תשלום</strong> (שורות 131-171):
+                <ul>
+                    <li>מקבל PayPal Order ID</li>
+                    <li>קורא ל-<code>ordersClient.captureOrder</code></li>
+                    <li>בודק שהתשלום הושלם בהצלחה</li>
+                    <li>מחזיר transaction ID ופרטי התשלום</li>
+                </ul>
+            </li>
+            <li><strong>קבלת פרטי הזמנה</strong> (שורות 173-187):
+                <ul>
+                    <li>מקבל PayPal Order ID</li>
+                    <li>קורא ל-<code>ordersClient.getOrder</code></li>
+                    <li>מחזיר את כל פרטי ההזמנה</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - אתחול PayPal Client:</strong>
+            <pre><code>const client = new Client({
+  clientCredentialsAuthCredentials: {
+    oAuthClientId: clientId,
+    oAuthClientSecret: clientSecret,
+  },
+  environment: mode === 'live'
+    ? Environment.Live
+    : Environment.Sandbox,
+});
+
+this.ordersClient = new OrdersController(client);</code></pre>
+        </div>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - יצירת Order:</strong>
+            <pre><code>const orderBody = {
+  intent: 'CAPTURE',
+  purchaseUnits: [{
+    referenceId: orderId || `ORDER-${Date.now()}`,
+    amount: {
+      currencyCode: currency,
+      value: amount.toFixed(2),
+    },
+  }],
+  applicationContext: {
+    brandName: 'מרפאת שיניים',
+    returnUrl: `${process.env.FRONTEND_URL}/orders/success`,
+    cancelUrl: `${process.env.FRONTEND_URL}/checkout`,
+  },
+};
+
+const response = await this.ordersClient.createOrder({ body: orderBody });</code></pre>
+        </div>
+        
+        <div class="warning">
+            <strong>חשוב:</strong> הקובץ כולל בדיקות מקיפות לוודא שהשירות מאותחל לפני שימוש. 
+            אם ה-credentials לא מוגדרים או שהאתחול נכשל, השירות לא יעבוד והשגיאות יתועדו ב-logs.
+        </div>
+    </div>
+    
+    <!-- Backend File 3: orders.service.ts -->
+    <div class="file-section backend">
+        <div class="file-path">apps/clinic-backend/src/orders/orders.service.ts</div>
+        
+        <h3>3. orders.service.ts - שירות ניהול הזמנות</h3>
+        
+        <div class="screenshot-placeholder">
+            📸 כאן יש להציב תצלום מסך של הקובץ orders.service.ts ב-IDE
+            <br>
+            <small>מומלץ לצלם את החלקים המרכזיים: createOrder (שורות 25-100), createPayPalOrder (שורות 102-149), capturePayPalPayment (שורות 151-217)</small>
+        </div>
+        
+        <h4>תפקיד הקובץ:</h4>
+        <p>קובץ זה מטפל בכל הלוגיקה הקשורה להזמנות: יצירה, עדכון מלאי, אינטגרציה עם PayPal, וניהול סטטוסים.</p>
+        
+        <h4>מה קורה בקובץ:</h4>
+        <ol>
+            <li><strong>יצירת הזמנה</strong> (שורות 25-100):
+                <ul>
+                    <li>בודקת שכל המוצרים קיימים במסד הנתונים</li>
+                    <li>בודקת מלאי - אם אין מספיק, זורקת שגיאה</li>
+                    <li>יוצרת הזמנה חדשה במסד הנתונים</li>
+                    <li>מעדכנת את המלאי של כל מוצר (מפחיתה את הכמות)</li>
+                    <li>מחזירה את ההזמנה עם מוצרים populated</li>
+                </ul>
+            </li>
+            <li><strong>יצירת PayPal Order</strong> (שורות 102-149):
+                <ul>
+                    <li>בודקת שההזמנה קיימת ולא שולמה כבר</li>
+                    <li>אם PayPal Order כבר נוצר, מחזירה את הקיים</li>
+                    <li>אם לא, קוראת ל-<code>paypalService.createOrder</code></li>
+                    <li>שומרת את PayPal Order ID בהזמנה</li>
+                </ul>
+            </li>
+            <li><strong>Capture תשלום PayPal</strong> (שורות 151-217):
+                <ul>
+                    <li>בודקת שההזמנה קיימת ולא שולמה</li>
+                    <li>בודקת שה� PayPal Order ID תואם</li>
+                    <li>קוראת ל-<code>paypalService.captureOrder</code></li>
+                    <li>אם התשלום הצליח:
+                        <ul>
+                            <li>מעדכנת את סטטוס ההזמנה ל-"paid" ו-"completed"</li>
+                            <li>שומרת את transaction ID</li>
+                        </ul>
+                    </li>
+                    <li>אם התשלום נכשל, מעדכנת את הסטטוס ל-"failed"</li>
+                </ul>
+            </li>
+            <li><strong>פונקציות נוספות</strong>:
+                <ul>
+                    <li><code>getAllOrders</code> - מחזירה את כל ההזמנות (למנהל)</li>
+                    <li><code>getUserOrders</code> - מחזירה הזמנות של משתמש ספציפי</li>
+                    <li><code>getOrderById</code> - מחזירה הזמנה לפי ID</li>
+                    <li><code>updateOrderStatus</code> - מעדכנת סטטוס הזמנה</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - בדיקת מלאי:</strong>
+            <pre><code>for (const item of createOrderDto.items) {
+  const product = await this.productModel.findById(item.productId);
+  if (!product) {
+    throw new NotFoundException(`Product ${item.productId} not found`);
+  }
+  
+  if (product.count < item.quantity) {
+    inventoryErrors.push(
+      `Insufficient inventory for product: ${product.name}`
+    );
+  }
+}</code></pre>
+        </div>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - עדכון מלאי:</strong>
+            <pre><code>for (const item of createOrderDto.items) {
+  await this.productModel.findByIdAndUpdate(
+    item.productId,
+    { $inc: { count: -item.quantity } },
+    { new: true }
+  );
+}</code></pre>
+        </div>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - Capture תשלום:</strong>
+            <pre><code>const captureResult = await this.paypalService.captureOrder(paypalOrderId);
+
+if (captureResult.success && captureResult.transactionId) {
+  order.paymentStatus = "paid";
+  order.status = "completed";
+  order.transactionId = captureResult.transactionId;
+  await order.save();
+}</code></pre>
+        </div>
+        
+        <div class="note">
+            <strong>הסבר:</strong> הקובץ כולל לוגיקה מורכבת לניהול הזמנות, כולל בדיקות מלאי, 
+            עדכון מלאי אטומי, ואינטגרציה מלאה עם PayPal. כל פעולה מתועדת ב-logs למעקב.
+        </div>
+    </div>
+    
+    <!-- Backend File 4: auth.service.ts -->
+    <div class="file-section backend">
+        <div class="file-path">apps/clinic-backend/src/auth/auth.service.ts</div>
+        
+        <h3>4. auth.service.ts - שירות אימות משתמשים</h3>
+        
+        <div class="screenshot-placeholder">
+            📸 כאן יש להציב תצלום מסך של הקובץ auth.service.ts ב-IDE
+            <br>
+            <small>מומלץ לצלם את החלקים המרכזיים: login (שורות 24-78), signup (שורות 80-116), validate (שורות 118-137)</small>
+        </div>
+        
+        <h4>תפקיד הקובץ:</h4>
+        <p>קובץ זה מטפל בכל הלוגיקה הקשורה לאימות משתמשים: התחברות, הרשמה, ואימות טוקנים.</p>
+        
+        <h4>מה קורה בקובץ:</h4>
+        <ol>
+            <li><strong>התחברות (Login)</strong> (שורות 24-78):
+                <ul>
+                    <li>בודקת שהאימייל והסיסמה הוזנו</li>
+                    <li>מחפשת משתמש במסד הנתונים לפי אימייל</li>
+                    <li>משווה את הסיסמה עם bcrypt</li>
+                    <li>אם הסיסמה נכונה:
+                        <ul>
+                            <li>יוצרת JWT token עם user ID ו-role</li>
+                            <li>מחזירה את המשתמש (ללא סיסמה) ואת הטוקן</li>
+                            <li>יוצרת סל למשתמש אם לא קיים</li>
+                        </ul>
+                    </li>
+                    <li>אם הסיסמה שגויה, זורקת <code>UnauthorizedException</code></li>
+                </ul>
+            </li>
+            <li><strong>הרשמה (Signup)</strong> (שורות 80-116):
+                <ul>
+                    <li>בודקת שכל השדות הוזנו</li>
+                    <li>מצפינה את הסיסמה עם bcrypt (10 rounds)</li>
+                    <li>יוצרת משתמש חדש במסד הנתונים</li>
+                    <li>יוצרת סל חדש למשתמש</li>
+                    <li>מחזירה את המשתמש (ללא סיסמה)</li>
+                    <li>מטפלת בשגיאות (משתמש קיים, validation errors)</li>
+                </ul>
+            </li>
+            <li><strong>אימות טוקן (Validate)</strong> (שורות 118-137):
+                <ul>
+                    <li>מקבלת user ID</li>
+                    <li>מחפשת את המשתמש במסד הנתונים</li>
+                    <li>מחזירה את פרטי המשתמש (ללא סיסמה)</li>
+                    <li>יוצרת סל אם לא קיים</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - התחברות:</strong>
+            <pre><code>const user = await this.userModel.findOne({ email });
+
+if (!user) {
+  throw new UnauthorizedException('Invalid email or password');
+}
+
+const isPasswordValid = await bcrypt.compare(password, user.password);
+if (!isPasswordValid) {
+  throw new UnauthorizedException('Invalid email or password');
+}
+
+const token = jwt.sign(
+  { id: user._id.toString(), role: user.role },
+  this.JWT_SECRET,
+  { expiresIn: '24h' }
+);</code></pre>
+        </div>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - הרשמה:</strong>
+            <pre><code>const hashedPassword = await bcrypt.hash(password, 10);
+const user = new this.userModel({ 
+  name, 
+  email, 
+  password: hashedPassword 
+});
+await user.save();
+
+const cart = new this.cartModel({ userId: user._id, items: [] });
+await cart.save();</code></pre>
+        </div>
+        
+        <div class="note">
+            <strong>הסבר:</strong> הקובץ משתמש ב-bcrypt להצפנת סיסמאות ו-JWT ליצירת טוקנים מאובטחים. 
+            הסיסמאות לעולם לא נשלחות חזרה ללקוח - רק "********" מוחזר.
+        </div>
+    </div>
+    
+    <!-- Backend File 5: team.service.ts -->
+    <div class="file-section backend">
+        <div class="file-path">apps/clinic-backend/src/team/team.service.ts</div>
+        
+        <h3>5. team.service.ts - שירות ניהול צוות</h3>
+        
+        <div class="screenshot-placeholder">
+            📸 כאן יש להציב תצלום מסך של הקובץ team.service.ts ב-IDE
+            <br>
+            <small>מומלץ לצלם את החלקים המרכזיים: findAll (שורות 20-22), create (שורות 32-54), seedTeamMembers (שורות 96-127)</small>
+        </div>
+        
+        <h4>תפקיד הקובץ:</h4>
+        <p>קובץ זה מטפל בכל הפעולות CRUD על חברי צוות: יצירה, קריאה, עדכון, מחיקה, וטעינת נתונים ראשונית.</p>
+        
+        <h4>מה קורה בקובץ:</h4>
+        <ol>
+            <li><strong>קבלת כל חברי הצוות</strong> (שורות 20-22):
+                <ul>
+                    <li>מחזירה את כל חברי הצוות מהמסד הנתונים</li>
+                    <li>ממיינת לפי תאריך יצירה (החדשים ראשונים)</li>
+                </ul>
+            </li>
+            <li><strong>קבלת חבר צוות בודד</strong> (שורות 24-30):
+                <ul>
+                    <li>מחפשת חבר צוות לפי ID</li>
+                    <li>אם לא נמצא, זורקת <code>NotFoundException</code></li>
+                </ul>
+            </li>
+            <li><strong>יצירת חבר צוות</strong> (שורות 32-54):
+                <ul>
+                    <li>בודקת שהשם הוזן</li>
+                    <li>יוצרת חבר צוות חדש עם name, img, description</li>
+                    <li>שומרת במסד הנתונים</li>
+                    <li>מטפלת בשגיאות validation</li>
+                </ul>
+            </li>
+            <li><strong>עדכון חבר צוות</strong> (שורות 56-86):
+                <ul>
+                    <li>מחפשת את חבר הצוות</li>
+                    <li>מעדכנת רק את השדות שהוזנו</li>
+                    <li>שומרת את השינויים</li>
+                </ul>
+            </li>
+            <li><strong>מחיקת חבר צוות</strong> (שורות 88-94):
+                <ul>
+                    <li>מוחקת חבר צוות לפי ID</li>
+                    <li>אם לא נמצא, זורקת <code>NotFoundException</code></li>
+                </ul>
+            </li>
+            <li><strong>טעינת נתונים ראשונית (Seed)</strong> (שורות 96-127):
+                <ul>
+                    <li>מחפשת את קובץ <code>team.json</code> בכמה נתיבים אפשריים</li>
+                    <li>קוראת את התוכן וקוראת אותו כ-JSON</li>
+                    <li>מוחקת את כל חברי הצוות הקיימים</li>
+                    <li>יוצרת חברי צוות חדשים מהנתונים</li>
+                    <li>מחזירה את מספר החברים שנוצרו</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - יצירה:</strong>
+            <pre><code>const member = new this.teamModel({
+  name: name.trim(),
+  img: img?.trim(),
+  description: description?.trim(),
+});
+
+return await member.save();</code></pre>
+        </div>
+        
+        <div class="code-highlight">
+            <strong>קוד מרכזי - Seed:</strong>
+            <pre><code>const possiblePaths = [
+  join(__dirname, '../data/team.json'),
+  join(process.cwd(), 'apps/clinic-backend/src/data/team.json'),
+  join(__dirname, '../../data/team.json'),
+];
+
+let fileContent: string | null = null;
+for (const path of possiblePaths) {
+  try {
+    fileContent = readFileSync(path, 'utf-8');
+    break;
+  } catch (err) {
+    continue;
+  }
+}
+
+const teamData = JSON.parse(fileContent);
+await this.teamModel.deleteMany({});
+const members = await this.teamModel.insertMany(teamData);</code></pre>
+        </div>
+        
+        <div class="note">
+            <strong>הסבר:</strong> הקובץ כולל פונקציית seed חכמה שמחפשת את קובץ ה-JSON בכמה נתיבים אפשריים, 
+            מה שמאפשר לעבוד גם בסביבת פיתוח וגם בסביבת build. זה פתר בעיה שהייתה לנו בעבר עם נתיבי קבצים.
+        </div>
+    </div>
+    
+    <div class="note" style="margin-top: 50px;">
+        <h3>הוראות לצילום מסך:</h3>
+        <ol>
+            <li>פתח את הקובץ ב-IDE (Visual Studio Code או Cursor)</li>
+            <li>ודא שהקוד נראה בבירור (font size מתאים, syntax highlighting פעיל)</li>
+            <li>צלם את החלק הרלוונטי של הקוד (כפי שצוין בכל סעיף)</li>
+            <li>שמור את התמונה בפורמט PNG או JPG</li>
+            <li>הכנס את התמונה במקום ה-placeholder המתאים במסמך זה</li>
+            <li>ודא שהתמונה ברורה וניתנת לקריאה</li>
+        </ol>
+        <p><strong>טיפ:</strong> השתמש ב-Zoom Out ב-IDE כדי להציג יותר קוד בתמונה אחת, או צלם מספר תמונות לחלקים שונים של הקובץ.</p>
+    </div>
+    
+    <div style="margin-top: 50px; padding: 20px; background: #f0f0f0; border-radius: 8px;">
+        <h3>סיכום</h3>
+        <p>מסמך זה כולל תיעוד מפורט של 10 קבצים מרכזיים בפרויקט:</p>
+        <ul>
+            <li><strong>Frontend (5 קבצים):</strong> App.tsx, Checkout.tsx, Admin.tsx, HeroTeam.tsx, LoginComponent.tsx</li>
+            <li><strong>Backend (5 קבצים):</strong> main.ts, paypal.service.ts, orders.service.ts, auth.service.ts, team.service.ts</li>
+        </ul>
+        <p>כל קובץ כולל הסבר מפורט על התפקיד שלו, מה קורה בו, וקוד מרכזי עם הערות. 
+        הוסף את תצלומי המסך המתאימים כדי להשלים את התיעוד.</p>
+    </div>
+</body>
+</html>
