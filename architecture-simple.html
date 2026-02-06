@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תרשימי ארכיטקטורה - גרסה פשוטה</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            margin: 30px;
+            padding: 30px;
+            background-color: white;
+            direction: rtl;
+        }
+        .diagram-container {
+            background: white;
+            padding: 40px;
+            margin: 40px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            page-break-after: always;
+        }
+        h1 {
+            color: #1a1a1a;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 20px 0;
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        @media print {
+            .diagram-container {
+                page-break-after: always;
+                border: 2px solid #000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>ארכיטקטורת המערכת</h1>
+
+    <div class="diagram-container">
+        <h2>מבנה כללי</h2>
+        <div class="mermaid">
+graph TB
+    Frontend[Frontend<br/>React + Vite] --> Backend[Backend<br/>NestJS]
+    Backend --> Database[(MongoDB)]
+    Backend --> PayPal[PayPal API]
+        </div>
+    </div>
+
+    <div class="diagram-container">
+        <h2>זרימת תשלום</h2>
+        <div class="mermaid">
+sequenceDiagram
+    participant U as משתמש
+    participant F as Frontend
+    participant B as Backend
+    participant P as PayPal
+    
+    U->>F: לחיצה על תשלום
+    F->>B: יצירת הזמנה
+    B->>P: יצירת PayPal Order
+    P-->>B: PayPal Order ID
+    B-->>F: PayPal Order ID
+    F->>P: אישור תשלום
+    P-->>F: אישור
+    F->>B: Capture תשלום
+    B->>P: Capture
+    P-->>B: תשלום הושלם
+    B-->>F: אישור הזמנה
+        </div>
+    </div>
+
+    <div class="diagram-container">
+        <h2>מבנה Backend</h2>
+        <div class="mermaid">
+graph LR
+    App[App Module] --> Auth[Auth]
+    App --> Orders[Orders]
+    App --> Products[Products]
+    App --> Cart[Cart]
+    Orders --> Payment[Payment]
+    Payment --> PayPal[PayPal Service]
+        </div>
+    </div>
+
+    <div class="diagram-container">
+        <h2>מבנה Frontend</h2>
+        <div class="mermaid">
+graph TB
+    App[App] --> Home[Home]
+    App --> Products[Products]
+    App --> Cart[Cart]
+    App --> Checkout[Checkout]
+    App --> Admin[Admin]
+    Checkout --> PayPal[PayPal Button]
+        </div>
+    </div>
+
+    <div class="diagram-container">
+        <h2>זרימת יצירת הזמנה</h2>
+        <div class="mermaid">
+flowchart TD
+    Start([לחיצה על תשלום]) --> Create[יצירת הזמנה]
+    Create --> PayPalOrder[יצירת PayPal Order]
+    PayPalOrder --> Button[הצגת כפתור PayPal]
+    Button --> Approve[אישור PayPal]
+    Approve --> Capture[Capture תשלום]
+    Capture --> Success([הזמנה הושלמה])
+        </div>
+    </div>
+
+    <div class="diagram-container">
+        <h2>מבנה נתונים</h2>
+        <div class="mermaid">
+erDiagram
+    User ||--o{ Order : יוצר
+    User ||--|| Cart : יש
+    Order ||--o{ OrderItem : מכיל
+    Product ||--o{ OrderItem : מופיע_ב
+    
+    User {
+        string _id
+        string name
+        string email
+        string role
+    }
+    
+    Order {
+        string _id
+        ObjectId userId
+        number total
+        string status
+        string paypalOrderId
+    }
+    
+    Product {
+        string _id
+        string name
+        number price
+    }
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                fontFamily: "'Inter', 'Arial', sans-serif",
+                fontSize: '16px',
+                primaryColor: '#ffffff',
+                primaryTextColor: '#1a1a1a',
+                primaryBorderColor: '#333333',
+                lineColor: '#333333',
+                textColor: '#1a1a1a',
+                mainBkgColor: '#ffffff',
+                secondBkgColor: '#e8f5e9',
+                tertiaryBkgColor: '#ffffff'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                nodeSpacing: 80,
+                rankSpacing: 100,
+                padding: 20
+            },
+            sequence: {
+                diagramMarginX: 60,
+                diagramMarginY: 30,
+                actorMargin: 80,
+                width: 180,
+                height: 80,
+                boxMargin: 15,
+                messageMargin: 50,
+                fontSize: 16
+            },
+            er: {
+                fontSize: 16,
+                entityPadding: 15,
+                padding: 20
+            }
+        });
+    </script>
+</body>
+</html>

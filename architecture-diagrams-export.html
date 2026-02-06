@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ייצוא תרשימים ל-SVG</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Inter:wght@400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #fafafa;
+            direction: rtl;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .diagram-container {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #1a1a1a;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            font-family: 'Kalam', cursive;
+            letter-spacing: -0.5px;
+            margin: 10px 0 20px 0;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            font-family: 'Kalam', cursive;
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            font-size: 12px;
+        }
+        .export-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .export-btn:hover {
+            background-color: #45a049;
+        }
+        p {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin: 5px 0 25px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>תרשימי ארכיטקטורה - ייצוא ל-SVG</h1>
+    <p>לחץ על כפתור "ייצא SVG" מתחת לכל תרשים כדי להוריד אותו</p>
+
+    <div class="diagram-container">
+        <h2>תרשים ארכיטקטורה כללי</h2>
+        <button class="export-btn" onclick="exportSVG('diagram1')">ייצא SVG</button>
+        <div id="diagram1" class="mermaid">
+graph TB
+    subgraph Client[Frontend - React + Vite]
+        UI[React Components]
+        Router[React Router]
+        Context[Context API]
+        Axios[Axios HTTP Client]
+    end
+    
+    subgraph Backend[NestJS Backend]
+        Controllers[Controllers]
+        Services[Services]
+        Guards[Auth Guards]
+        DTOs[DTOs]
+    end
+    
+    subgraph Database[(MongoDB)]
+        Users[(Users)]
+        Products[(Products)]
+        Orders[(Orders)]
+        Cart[(Cart)]
+        Doctors[(Doctors)]
+        Team[(Team)]
+        Referrals[(Referrals)]
+    end
+    
+    subgraph External[External Services]
+        PayPal[PayPal API]
+        Email[SMTP Email]
+    end
+    
+    UI --> Router
+    Router --> Context
+    Context --> Axios
+    Axios -->|HTTP REST API| Controllers
+    Controllers --> Guards
+    Guards --> Services
+    Services --> DTOs
+    Services --> Database
+    Services --> PayPal
+    Services --> Email
+    
+    Database --> Users
+    Database --> Products
+    Database --> Orders
+    Database --> Cart
+    Database --> Doctors
+    Database --> Team
+    Database --> Referrals
+        </div>
+    </div>
+
+    <div class="diagram-container">
+        <h2>תרשים זרימת תשלום PayPal</h2>
+        <button class="export-btn" onclick="exportSVG('diagram2')">ייצא SVG</button>
+        <div id="diagram2" class="mermaid">
+sequenceDiagram
+    participant User as משתמש
+    participant Frontend as Frontend<br/>React
+    participant Backend as Backend<br/>NestJS
+    participant PayPalSDK as PayPal SDK<br/>Frontend
+    participant PayPalAPI as PayPal API
+    participant DB as MongoDB
+    
+    User->>Frontend: מעבר לעמוד תשלום
+    Frontend->>Frontend: טעינת PayPal SDK
+    Frontend->>Backend: GET /cart
+    Backend->>DB: שליפת סל קניות
+    DB-->>Backend: נתוני סל
+    Backend-->>Frontend: נתוני סל
+    
+    User->>Frontend: לחיצה על "המשך לתשלום"
+    Frontend->>Backend: POST /orders
+    Backend->>DB: יצירת הזמנה
+    DB-->>Backend: Order ID
+    
+    Backend->>PayPalAPI: createOrder (body)
+    PayPalAPI-->>Backend: PayPal Order ID
+    
+    Backend-->>Frontend: PayPal Order ID
+    Frontend->>PayPalSDK: יצירת כפתור PayPal
+    PayPalSDK-->>Frontend: כפתור PayPal מוכן
+    
+    User->>PayPalSDK: לחיצה על כפתור PayPal
+    PayPalSDK->>PayPalAPI: אישור תשלום
+    PayPalAPI-->>PayPalSDK: אישור תשלום
+    
+    PayPalSDK->>Frontend: onApprove callback
+    Frontend->>Backend: POST /orders/:id/payment/capture
+    Backend->>PayPalAPI: captureOrder (PayPal Order ID)
+    PayPalAPI-->>Backend: פרטי תשלום
+    
+    Backend->>DB: עדכון הזמנה - סטטוס "paid"
+    Backend->>DB: ניקוי סל קניות
+    Backend-->>Frontend: אישור תשלום
+    
+    Frontend->>Frontend: מעבר לעמוד אישור הזמנה
+    Frontend-->>User: הצגת פרטי הזמנה
+        </div>
+    </div>
+
+    <div class="diagram-container">
+        <h2>תרשים זרימת נתונים - יצירת הזמנה</h2>
+        <button class="export-btn" onclick="exportSVG('diagram3')">ייצא SVG</button>
+        <div id="diagram3" class="mermaid">
+flowchart TD
+    Start([משתמש לוחץ 'המשך לתשלום']) --> ValidateCart{סל תקין?}
+    ValidateCart -->|לא| Error1[שגיאה: סל ריק]
+    ValidateCart -->|כן| CheckPayPal{PayPal SDK נטען?}
+    
+    CheckPayPal -->|לא| Error2[שגיאה: PayPal לא מוגדר]
+    CheckPayPal -->|כן| CreateOrder[POST /orders]
+    
+    CreateOrder --> ValidateOrder{הזמנה נוצרה?}
+    ValidateOrder -->|לא| Error3[שגיאה ביצירת הזמנה]
+    ValidateOrder -->|כן| CreatePayPalOrder[POST /orders/:id/payment/create]
+    
+    CreatePayPalOrder --> PayPalCreate[PayPalService.createOrder]
+    PayPalCreate --> PayPalAPI[PayPal API]
+    PayPalAPI -->|PayPal Order ID| SetOrderId[שמירת PayPal Order ID]
+    
+    SetOrderId --> RenderButton[הצגת כפתור PayPal]
+    RenderButton --> WaitUser[ממתין ללחיצת משתמש]
+    
+    WaitUser --> UserClick[משתמש לוחץ PayPal]
+    UserClick --> PayPalApprove[PayPal onApprove]
+    PayPalApprove --> CapturePayment[POST /orders/:id/payment/capture]
+    
+    CapturePayment --> PayPalCapture[PayPalService.captureOrder]
+    PayPalCapture --> PayPalAPI2[PayPal API Capture]
+    PayPalAPI2 -->|תשלום הושלם| UpdateOrder[עדכון הזמנה - paid]
+    
+    UpdateOrder --> ClearCart[ניקוי סל]
+    ClearCart --> Success[מעבר לעמוד אישור]
+    Success --> End([סיום])
+    
+    Error1 --> End
+    Error2 --> End
+    Error3 --> End
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                fontFamily: "'Inter', 'Arial', sans-serif",
+                fontSize: '13px',
+                primaryColor: '#ffffff',
+                primaryTextColor: '#1a1a1a',
+                primaryBorderColor: '#333333',
+                lineColor: '#333333',
+                secondaryColor: '#e8f5e9',
+                tertiaryColor: '#f5f5f5',
+                noteBkgColor: '#fff9c4',
+                noteTextColor: '#1a1a1a',
+                noteBorderColor: '#fdd835',
+                textColor: '#1a1a1a',
+                mainBkgColor: '#ffffff',
+                secondBkgColor: '#e8f5e9',
+                tertiaryBkgColor: '#ffffff',
+                edgeLabelBackground: '#ffffff',
+                clusterBkgColor: '#f5f5f5',
+                clusterBorderColor: '#cccccc',
+                defaultLinkColor: '#333333',
+                titleColor: '#2c3e50',
+                actorBorder: '#333333',
+                actorBkg: '#ffffff',
+                actorTextColor: '#1a1a1a',
+                actorLineColor: '#333333',
+                signalColor: '#333333',
+                signalTextColor: '#1a1a1a',
+                labelBoxBkgColor: '#ffffff',
+                labelBoxBorderColor: '#333333',
+                labelTextColor: '#1a1a1a',
+                loopTextColor: '#1a1a1a',
+                activationBorderColor: '#333333',
+                activationBkgColor: '#e8f5e9',
+                sequenceNumberColor: '#1a1a1a',
+                sectionBkgColor: '#f5f5f5',
+                altSectionBkgColor: '#ffffff',
+                sectionBkgColor2: '#ffffff',
+                excludeBkgColor: '#ffebee',
+                cScale0: '#e8f5e9',
+                cScale1: '#c8e6c9',
+                cScale2: '#a5d6a7'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                nodeSpacing: 60,
+                rankSpacing: 80,
+                padding: 15,
+                defaultRenderer: 'dagre-wrapper'
+            },
+            sequence: {
+                diagramMarginX: 50,
+                diagramMarginY: 20,
+                actorMargin: 60,
+                width: 150,
+                height: 70,
+                boxMargin: 10,
+                boxTextMargin: 8,
+                noteMargin: 10,
+                messageMargin: 40,
+                mirrorActors: false,
+                fontSize: 13,
+                actorFontSize: 13,
+                actorFontFamily: "'Inter', 'Arial', sans-serif",
+                noteFontSize: 13,
+                noteFontFamily: "'Inter', 'Arial', sans-serif"
+            },
+            er: {
+                fontSize: 13,
+                entityPadding: 10,
+                padding: 15,
+                stroke: '#333333',
+                fill: '#ffffff'
+            },
+            gantt: {
+                fontSize: 13
+            }
+        });
+
+        function exportSVG(diagramId) {
+            const element = document.getElementById(diagramId);
+            const svg = element.querySelector('svg');
+            if (svg) {
+                const svgData = new XMLSerializer().serializeToString(svg);
+                const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+                const svgUrl = URL.createObjectURL(svgBlob);
+                const downloadLink = document.createElement('a');
+                downloadLink.href = svgUrl;
+                downloadLink.download = `${diagramId}.svg`;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            } else {
+                alert('התרשים עדיין לא נטען. אנא המתן מספר שניות ונסה שוב.');
+            }
+        }
+    </script>
+</body>
+</html>

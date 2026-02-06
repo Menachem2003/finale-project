@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ייצוא תרשימים כתמונות</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            margin: 30px;
+            padding: 30px;
+            background-color: white;
+            direction: rtl;
+        }
+        .diagram-container {
+            background: white;
+            padding: 40px;
+            margin: 40px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #1a1a1a;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 20px 0;
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        .export-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            display: block;
+            margin: 20px auto;
+        }
+        .export-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>תרשימי ארכיטקטורה - ייצוא תמונות</h1>
+    <p style="text-align: center; margin-bottom: 30px;">לחץ על כפתור "ייצא PNG" מתחת לכל תרשים</p>
+
+    <div class="diagram-container" id="diagram1">
+        <h2>מבנה כללי</h2>
+        <div class="mermaid">
+graph TB
+    Frontend[Frontend<br/>React + Vite] --> Backend[Backend<br/>NestJS]
+    Backend --> Database[(MongoDB)]
+    Backend --> PayPal[PayPal API]
+        </div>
+        <button class="export-btn" onclick="exportPNG('diagram1', 'מבנה-כללי.png')">ייצא PNG</button>
+    </div>
+
+    <div class="diagram-container" id="diagram2">
+        <h2>זרימת תשלום</h2>
+        <div class="mermaid">
+sequenceDiagram
+    participant U as משתמש
+    participant F as Frontend
+    participant B as Backend
+    participant P as PayPal
+    
+    U->>F: לחיצה על תשלום
+    F->>B: יצירת הזמנה
+    B->>P: יצירת PayPal Order
+    P-->>B: PayPal Order ID
+    B-->>F: PayPal Order ID
+    F->>P: אישור תשלום
+    P-->>F: אישור
+    F->>B: Capture תשלום
+    B->>P: Capture
+    P-->>B: תשלום הושלם
+    B-->>F: אישור הזמנה
+        </div>
+        <button class="export-btn" onclick="exportPNG('diagram2', 'זרימת-תשלום.png')">ייצא PNG</button>
+    </div>
+
+    <div class="diagram-container" id="diagram3">
+        <h2>מבנה Backend</h2>
+        <div class="mermaid">
+graph LR
+    App[App Module] --> Auth[Auth]
+    App --> Orders[Orders]
+    App --> Products[Products]
+    App --> Cart[Cart]
+    Orders --> Payment[Payment]
+    Payment --> PayPal[PayPal Service]
+        </div>
+        <button class="export-btn" onclick="exportPNG('diagram3', 'מבנה-Backend.png')">ייצא PNG</button>
+    </div>
+
+    <div class="diagram-container" id="diagram4">
+        <h2>מבנה Frontend</h2>
+        <div class="mermaid">
+graph TB
+    App[App] --> Home[Home]
+    App --> Products[Products]
+    App --> Cart[Cart]
+    App --> Checkout[Checkout]
+    App --> Admin[Admin]
+    Checkout --> PayPal[PayPal Button]
+        </div>
+        <button class="export-btn" onclick="exportPNG('diagram4', 'מבנה-Frontend.png')">ייצא PNG</button>
+    </div>
+
+    <div class="diagram-container" id="diagram5">
+        <h2>זרימת יצירת הזמנה</h2>
+        <div class="mermaid">
+flowchart TD
+    Start([לחיצה על תשלום]) --> Create[יצירת הזמנה]
+    Create --> PayPalOrder[יצירת PayPal Order]
+    PayPalOrder --> Button[הצגת כפתור PayPal]
+    Button --> Approve[אישור PayPal]
+    Approve --> Capture[Capture תשלום]
+    Capture --> Success([הזמנה הושלמה])
+        </div>
+        <button class="export-btn" onclick="exportPNG('diagram5', 'זרימת-יצירת-הזמנה.png')">ייצא PNG</button>
+    </div>
+
+    <div class="diagram-container" id="diagram6">
+        <h2>מבנה נתונים</h2>
+        <div class="mermaid">
+erDiagram
+    User ||--o{ Order : יוצר
+    User ||--|| Cart : יש
+    Order ||--o{ OrderItem : מכיל
+    Product ||--o{ OrderItem : מופיע_ב
+    
+    User {
+        string _id
+        string name
+        string email
+        string role
+    }
+    
+    Order {
+        string _id
+        ObjectId userId
+        number total
+        string status
+        string paypalOrderId
+    }
+    
+    Product {
+        string _id
+        string name
+        number price
+    }
+        </div>
+        <button class="export-btn" onclick="exportPNG('diagram6', 'מבנה-נתונים.png')">ייצא PNG</button>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                fontFamily: "'Inter', 'Arial', sans-serif",
+                fontSize: '16px',
+                primaryColor: '#ffffff',
+                primaryTextColor: '#1a1a1a',
+                primaryBorderColor: '#333333',
+                lineColor: '#333333',
+                textColor: '#1a1a1a',
+                mainBkgColor: '#ffffff',
+                secondBkgColor: '#e8f5e9',
+                tertiaryBkgColor: '#ffffff'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                nodeSpacing: 80,
+                rankSpacing: 100,
+                padding: 20
+            },
+            sequence: {
+                diagramMarginX: 60,
+                diagramMarginY: 30,
+                actorMargin: 80,
+                width: 180,
+                height: 80,
+                boxMargin: 15,
+                messageMargin: 50,
+                fontSize: 16
+            },
+            er: {
+                fontSize: 16,
+                entityPadding: 15,
+                padding: 20
+            }
+        });
+
+        async function exportPNG(containerId, filename) {
+            const container = document.getElementById(containerId);
+            if (!container) {
+                alert('תרשים לא נמצא');
+                return;
+            }
+
+            try {
+                // המתן שהתרשים יטען
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                const canvas = await html2canvas(container, {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    logging: false,
+                    useCORS: true
+                });
+
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (error) {
+                console.error('שגיאה בייצוא:', error);
+                alert('שגיאה בייצוא התמונה. נסה שוב.');
+            }
+        }
+    </script>
+</body>
+</html>
